@@ -17,22 +17,27 @@
       -webkit-tap-highlight-color: transparent;
     }
     html, body {
-      margin: 0; padding: 0; width: 100%; height: 100dvh; overflow: hidden;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100dvh;
+      max-height: 100dvh;
+      overflow: hidden;
       font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
       background: linear-gradient(180deg, #FFFBEB 0%, #FEF3C7 50%, #E0F2FE 100%);
     }
     .tactile-btn {
       transition: transform 0.14s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.14s ease;
-      box-shadow: 0 5px 0 rgba(15, 23, 42, 0.15);
+      box-shadow: 0 4px 0 rgba(15, 23, 42, 0.15);
       touch-action: manipulation;
     }
     .tactile-btn:active:not(:disabled) {
-      transform: translateY(4px);
+      transform: translateY(3px);
       box-shadow: 0 1px 0 rgba(15, 23, 42, 0.15);
     }
     .pattern-menu-card {
       transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
-      box-shadow: 0 10px 0 rgba(15, 23, 42, 0.1), 0 14px 28px rgba(15, 23, 42, 0.08);
+      box-shadow: 0 8px 0 rgba(15, 23, 42, 0.1), 0 12px 24px rgba(15, 23, 42, 0.08);
       touch-action: manipulation;
     }
     .pattern-menu-card:active {
@@ -41,10 +46,31 @@
     }
     .storybook-card {
       transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease;
-      box-shadow: 0 7px 0 rgba(15, 23, 42, 0.1), 0 10px 20px rgba(15, 23, 42, 0.07);
+      box-shadow: 0 6px 0 rgba(15, 23, 42, 0.1), 0 8px 16px rgba(15, 23, 42, 0.07);
       touch-action: none;
     }
     .storybook-card:active { transform: scale(0.97); }
+
+    /* 固定圖片框為 4:3 橫向圖卡比例，完美貼合相片 */
+    .img-fit-box {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      max-height: 22dvh;
+      overflow: hidden;
+      border-radius: 0.75rem;
+      background-color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .img-fit-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 0.65rem;
+    }
+
     @keyframes slot-pulse {
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.02); }
@@ -92,10 +118,10 @@
 <body class="w-full h-full flex flex-col justify-between overflow-hidden select-none">
 
   <canvas id="confettiCanvas" class="fixed inset-0 pointer-events-none z-50"></canvas>
-  <div id="touchDragGhost" class="fixed pointer-events-none z-50 hidden" style="width: 175px; height: 165px; transform: translate(-50%, -50%) rotate(2deg);"></div>
+  <div id="touchDragGhost" class="fixed pointer-events-none z-50 hidden" style="width: 190px; transform: translate(-50%, -50%) rotate(2deg);"></div>
 
   <!-- VIEW 1: 🏠 句式練習主頁 -->
-  <div id="homeScreen" class="w-full h-full flex flex-col justify-between px-3.5 sm:px-8 py-3 sm:py-5 max-w-6xl mx-auto">
+  <div id="homeScreen" class="w-full h-full flex flex-col justify-between px-3.5 sm:px-8 py-3 sm:py-5 max-w-6xl mx-auto overflow-hidden">
     <header class="shrink-0 flex items-center justify-between gap-2 pb-1">
       <div class="flex items-center gap-2.5 sm:gap-3.5">
         <div class="w-11 h-11 sm:w-14 sm:h-14 rounded-2xl bg-amber-400 border-3 border-amber-500 shadow flex items-center justify-center text-2xl sm:text-3xl">🗣️</div>
@@ -114,7 +140,7 @@
     </header>
 
     <main class="flex-1 min-h-0 flex items-center justify-center py-1.5 sm:py-3 overflow-y-auto thin-scroll">
-      <div id="patternMenuGrid" class="w-full h-full max-h-[580px] grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 items-stretch"></div>
+      <div id="patternMenuGrid" class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 items-center"></div>
     </main>
 
     <footer class="shrink-0 pt-1 text-center">
@@ -126,7 +152,7 @@
   </div>
 
   <!-- VIEW 2: 🎯 句式互動訓練畫面 -->
-  <div id="trainingScreen" class="hidden w-full h-full flex flex-col justify-between overflow-hidden">
+  <div id="trainingScreen" class="hidden w-full h-full max-h-full flex flex-col justify-between overflow-hidden">
     <header class="shrink-0 px-2.5 sm:px-6 pt-2 pb-1 flex items-center justify-between z-20 max-w-6xl w-full mx-auto gap-1.5">
       <div class="flex items-center gap-1.5 sm:gap-2">
         <button onclick="goToHomeScreen()" class="tactile-btn bg-white hover:bg-amber-50 text-slate-800 border-2 border-amber-300 px-2.5 sm:px-3.5 h-10 sm:h-11 rounded-full flex items-center gap-1 font-black text-xs sm:text-base">
@@ -151,21 +177,57 @@
       </div>
     </header>
 
-    <main class="flex-1 min-h-0 px-2.5 sm:px-6 pb-2.5 sm:pb-4 pt-1 flex flex-col justify-between gap-2 sm:gap-3.5 max-w-6xl w-full mx-auto">
-      <section class="flex-1 min-h-0 bg-white/90 rounded-[1.75rem] sm:rounded-[2rem] p-2 sm:p-3.5 border-4 border-amber-200 shadow-sm flex flex-col justify-center relative">
-        <div id="topSlotsContainer" class="w-full h-full"></div>
-        <div id="actionOverlayBar" class="hidden absolute inset-x-0 -bottom-3.5 sm:-bottom-4 flex justify-center z-30 pointer-events-none">
-          <div id="actionOverlayContent" class="pointer-events-auto flex items-center gap-2"></div>
-        </div>
-      </section>
+    <main class="flex-1 min-h-0 px-2.5 sm:px-6 pb-2.5 sm:pb-4 pt-1 flex flex-col justify-evenly gap-2 sm:gap-3 max-w-6xl w-full mx-auto overflow-hidden">
+      <!-- 上半部：句式擺放區 -->
+   <section class="w-full bg-white/90 rounded-[1.5rem] sm:rounded-[1.75rem] p-2.5 sm:p-3.5 border-4 border-amber-200 shadow-sm flex flex-col justify-center relative">
+     <div id="topSlotsContainer" class="w-full"></div>
+   </section>
 
-      <section class="flex-1 min-h-0 bg-white/85 rounded-[1.75rem] sm:rounded-[2rem] p-2 sm:p-3.5 border-4 border-amber-200/90 shadow-sm flex flex-col justify-center">
-        <div id="cardTray" class="w-full h-full"></div>
+   <!-- 中間獨立控制列：完全唔會遮住上面任何圖卡或文字！ -->
+   <div id="actionOverlayBar" class="hidden shrink-0 flex justify-center z-30 py-0.5">
+     <div id="actionOverlayContent" class="flex items-center gap-3"></div>
+   </div>
+
+      <!-- 下半部：圖卡選擇區 -->
+      <section class="w-full bg-white/85 rounded-[1.5rem] sm:rounded-[1.75rem] p-2.5 sm:p-3.5 border-4 border-amber-200/90 shadow-sm flex flex-col justify-center">
+        <div id="cardTray" class="w-full"></div>
       </section>
     </main>
   </div>
 
-  <!-- VIEW 3: ⚙️ 老師／家長設定面板 -->
+  <!-- VIEW 3: 🔍 兩指縮放觀察圖卡視窗 (Pinch-to-Zoom Lightbox Modal) -->
+  <div id="zoomModal" onclick="if(event.target === this) closeZoomModal()" class="fixed inset-0 bg-slate-900/85 backdrop-blur-md z-50 hidden flex flex-col items-center justify-between p-3 sm:p-6 select-none">
+    <!-- 頂部控制列 -->
+    <div class="w-full max-w-4xl flex items-center justify-between gap-2 z-20">
+      <div class="bg-white/95 border-2 border-amber-300 px-3.5 py-1.5 rounded-full flex items-center gap-2 shadow">
+        <span class="text-base sm:text-lg">🔍</span>
+        <span class="text-xs sm:text-sm font-black text-slate-700">兩指張開可放大觀察細節・單指可移動圖片</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button type="button" onclick="stepZoom(-0.4)" class="tactile-btn w-10 h-10 rounded-full bg-white text-slate-800 border-2 border-slate-300 font-black text-lg flex items-center justify-center">➖</button>
+        <button type="button" onclick="resetZoomTransform()" id="zoomLevelBadge" class="tactile-btn px-3 h-10 rounded-full bg-amber-100 text-amber-900 border-2 border-amber-300 font-black text-xs sm:text-sm flex items-center justify-center">100%</button>
+        <button type="button" onclick="stepZoom(0.4)" class="tactile-btn w-10 h-10 rounded-full bg-white text-slate-800 border-2 border-slate-300 font-black text-lg flex items-center justify-center">➕</button>
+        <button type="button" onclick="closeZoomModal()" class="tactile-btn w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-rose-500 hover:bg-rose-400 text-white border-2 border-white font-black text-lg flex items-center justify-center shadow-lg">✕</button>
+      </div>
+    </div>
+
+    <!-- 中間可無段縮放及拖動嘅大圖畫布 -->
+    <div id="zoomViewport" class="flex-1 w-full max-w-4xl my-2 bg-white/95 rounded-[2rem] border-4 border-amber-300 shadow-2xl overflow-hidden flex items-center justify-center relative" style="touch-action: none;">
+      <div id="zoomVisualWrap" class="w-full h-full flex items-center justify-center origin-center" style="transform: translate(0px, 0px) scale(1);">
+        <!-- 動態載入高清圖卡 -->
+      </div>
+    </div>
+
+    <!-- 底部文字與發音按鈕 -->
+    <div class="w-full max-w-2xl bg-white rounded-2xl px-5 py-3 border-4 border-amber-300 shadow-xl flex items-center justify-between gap-4 z-20">
+      <div id="zoomCaptionText" class="text-lg sm:text-2xl font-black text-slate-800 truncate"></div>
+      <button type="button" id="zoomSpeakBtn" class="tactile-btn shrink-0 bg-amber-400 hover:bg-amber-300 text-slate-900 border-2 border-amber-500 px-5 py-2 rounded-full font-black text-sm sm:text-lg flex items-center gap-1.5">
+        <span>🔊</span><span>聽讀音</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- VIEW 4: ⚙️ 老師／家長設定面板 -->
   <div id="teacherModal" onclick="if(event.target === this) closeTeacherModal()" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-5">
     <div class="bg-white rounded-[2rem] max-w-xl w-full max-h-[90dvh] overflow-y-auto thin-scroll border-4 border-slate-300 shadow-2xl p-4 sm:p-6 space-y-4 animate-pop">
       <div class="flex items-center justify-between border-b-2 border-slate-100 pb-3">
@@ -231,7 +293,7 @@
 
   <script>
     /********************************************************************
-     * 1. 智能圖片讀取引擎 (自動支援 .jpg / .png / .webp + 防快取版本號)
+     * 1. 智能圖片讀取引擎 (支援 🔍 放大鏡按鈕與兩指直接張開放大)
      ********************************************************************/
     function buildImgPath(rawPath) {
       const ver = window.IMAGE_VERSION || 1;
@@ -240,7 +302,6 @@
       return `${rawPath}?v=${ver}`;
     }
 
-    // 當 .jpg 讀唔到時，自動試 .png -> .JPG -> .webp，最後先顯示後備插圖並提示檔名
     function handleImgFallback(imgEl) {
       const raw = imgEl.getAttribute('data-raw-src') || '';
       const base = raw.replace(/\.(jpg|jpeg|png|webp)$/i, '');
@@ -257,13 +318,24 @@
       }
     }
 
-    function renderCardVisual(card) {
+    function renderCardVisual(card, showZoomBtn = true) {
       const rawPath = card.img || (card.sceneKey ? `images/${card.sceneKey}.jpg` : '');
       const fullSrc = buildImgPath(rawPath);
+      const cardIdAttr = card.id || '';
       return `
-        <div class="w-full h-full relative bg-slate-50 overflow-hidden">
+        <div class="img-fit-box" data-zoom-card-id="${cardIdAttr}">
+          ${showZoomBtn && cardIdAttr ? `
+            <button type="button"
+                    onpointerdown="event.stopPropagation();"
+                    onclick="event.stopPropagation(); openZoomModalByCardId('${cardIdAttr}')"
+                    aria-label="放大圖卡"
+                    title="放大觀察圖卡"
+                    class="absolute top-1.5 left-1.5 z-20 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/85 hover:bg-white text-slate-700 border border-slate-300 shadow flex items-center justify-center text-xs sm:text-sm active:scale-90">
+              🔍
+            </button>
+          ` : ''}
           <img src="${fullSrc}" data-raw-src="${rawPath}" data-retry-step="0" alt=""
-               class="w-full h-full object-cover animate-pop" draggable="false"
+               class="animate-pop" draggable="false"
                onerror="handleImgFallback(this)" />
           <div style="display:none;" class="w-full h-full flex-col items-center justify-center relative">
             ${renderCuteSceneSVG(card.sceneKey)}
@@ -276,7 +348,165 @@
     }
 
     /********************************************************************
-     * 2. 後備繪本圖案 (當某題暫時未放入相片時自動頂替，唔會穿崩)
+     * 2. 🔍 兩指縮放 (Pinch-to-Zoom) 及 單指平移觀察器
+     ********************************************************************/
+    let zoomState = {
+      isOpen: false,
+      scale: 1,
+      tx: 0,
+      ty: 0,
+      startDist: 0,
+      startScale: 1,
+      isPanning: false,
+      panStartX: 0,
+      panStartY: 0,
+      startTx: 0,
+      startTy: 0
+    };
+
+    function findCardById(cardId) {
+      return trayCards.find(c => c.id === cardId) ||
+             Object.values(slots).find(c => c && c.id === cardId);
+    }
+
+    function openZoomModalByCardId(cardId) {
+      const card = findCardById(cardId);
+      if (card) openZoomModal(card);
+    }
+
+    function openZoomModal(card) {
+      if (!card) return;
+      playSound('pop');
+      zoomState.isOpen = true;
+      resetZoomTransform();
+
+      const wrap = document.getElementById('zoomVisualWrap');
+      const rawPath = card.img || (card.sceneKey ? `images/${card.sceneKey}.jpg` : '');
+      const fullSrc = buildImgPath(rawPath);
+
+      wrap.innerHTML = `
+        <img src="${fullSrc}" data-raw-src="${rawPath}" data-retry-step="0" alt=""
+             class="max-w-full max-h-full w-auto h-auto object-contain rounded-2xl select-none"
+             draggable="false" onerror="handleImgFallback(this)" />
+        <div style="display:none;" class="w-full h-full flex-col items-center justify-center relative p-6">
+          ${renderCuteSceneSVG(card.sceneKey)}
+        </div>
+      `;
+
+      const spoken = getCardSpokenText(card);
+      document.getElementById('zoomCaptionText').textContent = spoken;
+      document.getElementById('zoomSpeakBtn').onclick = () => speakText(spoken);
+
+      document.getElementById('zoomModal').classList.remove('hidden');
+    }
+
+    function closeZoomModal() {
+      playSound('return');
+      zoomState.isOpen = false;
+      document.getElementById('zoomModal').classList.add('hidden');
+    }
+
+    function applyZoomTransform() {
+      const wrap = document.getElementById('zoomVisualWrap');
+      if (wrap) {
+        wrap.style.transform = `translate(${zoomState.tx}px, ${zoomState.ty}px) scale(${zoomState.scale})`;
+      }
+      const badge = document.getElementById('zoomLevelBadge');
+      if (badge) {
+        badge.textContent = `${Math.round(zoomState.scale * 100)}%`;
+      }
+    }
+
+    function resetZoomTransform() {
+      zoomState.scale = 1;
+      zoomState.tx = 0;
+      zoomState.ty = 0;
+      applyZoomTransform();
+    }
+
+    function stepZoom(delta) {
+      playSound('pop');
+      zoomState.scale = Math.min(4, Math.max(1, +(zoomState.scale + delta).toFixed(2)));
+      if (zoomState.scale === 1) { zoomState.tx = 0; zoomState.ty = 0; }
+      applyZoomTransform();
+    }
+
+    function setupPinchZoomGestures() {
+      // A. 在訓練畫面任何一張圖卡上「直接兩指張開」，即刻彈出放大觀察視窗！
+      document.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 2 && !zoomState.isOpen) {
+          const el = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
+          const cardBox = el ? el.closest('[data-zoom-card-id]') : null;
+          if (cardBox && cardBox.dataset.zoomCardId) {
+            e.preventDefault();
+            pointerDragState.active = false;
+            hideTouchDragGhost();
+            clearSlotHoverHighlights();
+            openZoomModalByCardId(cardBox.dataset.zoomCardId);
+          }
+        }
+      }, { passive: false });
+
+      // B. 在放大視窗內支援「兩指無段縮放 (100% ~ 400%)」及「單指拖動細節」
+      const viewport = document.getElementById('zoomViewport');
+      if (!viewport) return;
+
+      viewport.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 2) {
+          e.preventDefault();
+          zoomState.isPanning = false;
+          zoomState.startDist = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY
+          );
+          zoomState.startScale = zoomState.scale;
+        } else if (e.touches.length === 1) {
+          zoomState.isPanning = true;
+          zoomState.panStartX = e.touches[0].clientX;
+          zoomState.panStartY = e.touches[0].clientY;
+          zoomState.startTx = zoomState.tx;
+          zoomState.startTy = zoomState.ty;
+        }
+      }, { passive: false });
+
+      viewport.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 2 && zoomState.startDist > 0) {
+          e.preventDefault();
+          const dist = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY
+          );
+          const factor = dist / zoomState.startDist;
+          zoomState.scale = Math.min(4, Math.max(1, zoomState.startScale * factor));
+          applyZoomTransform();
+        } else if (e.touches.length === 1 && zoomState.isPanning && zoomState.scale > 1) {
+          e.preventDefault();
+          zoomState.tx = zoomState.startTx + (e.touches[0].clientX - zoomState.panStartX);
+          zoomState.ty = zoomState.startTy + (e.touches[0].clientY - zoomState.panStartY);
+          applyZoomTransform();
+        }
+      }, { passive: false });
+
+      viewport.addEventListener('touchend', (e) => {
+        if (e.touches.length < 2) zoomState.startDist = 0;
+        if (e.touches.length === 0) {
+          zoomState.isPanning = false;
+          if (zoomState.scale <= 1.02) resetZoomTransform();
+        }
+      });
+
+      // C. 支援電腦滑鼠滾輪縮放
+      viewport.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const delta = e.deltaY < 0 ? 0.25 : -0.25;
+        zoomState.scale = Math.min(4, Math.max(1, +(zoomState.scale + delta).toFixed(2)));
+        if (zoomState.scale === 1) { zoomState.tx = 0; zoomState.ty = 0; }
+        applyZoomTransform();
+      }, { passive: false });
+    }
+
+    /********************************************************************
+     * 3. 後備繪本圖案
      ********************************************************************/
     function renderCuteSceneSVG(sceneKey) {
       const map = {
@@ -308,7 +538,7 @@
     }
 
     /********************************************************************
-     * 3. 讀取 questions.js 題庫與程式狀態
+     * 4. 讀取 questions.js 題庫與程式狀態
      ********************************************************************/
     const BANK = window.QUESTION_BANK || { causal: [], sequence: [] };
     let causalQuestions = BANK.causal || [];
@@ -340,7 +570,7 @@
     }
 
     /********************************************************************
-     * 4. 音效與語音朗讀
+     * 5. 音效與語音朗讀
      ********************************************************************/
     let audioCtx = null;
     function getAudioCtx() {
@@ -480,7 +710,7 @@
     }
 
     /********************************************************************
-     * 5. 主頁選單與練習畫面渲染
+     * 6. 主頁選單與練習畫面渲染
      ********************************************************************/
     function initApp() {
       const savedStars = localStorage.getItem('sen_causal_stars');
@@ -491,6 +721,7 @@
       } catch (e) {}
 
       setupGlobalPointerListeners();
+      setupPinchZoomGestures();
       updateTeacherControlsUI();
       renderHomeScreen();
     }
@@ -515,20 +746,20 @@
       const card1 = document.createElement('button');
       card1.type = 'button';
       card1.onclick = () => enterSentencePatternTraining('because_therefore');
-      card1.className = 'pattern-menu-card w-full h-full rounded-[2rem] p-3.5 sm:p-5 border-4 bg-white border-emerald-400 hover:border-emerald-500 flex flex-col justify-between text-left relative overflow-hidden cursor-pointer';
+      card1.className = 'pattern-menu-card w-full rounded-[2rem] p-4 sm:p-5 border-4 bg-white border-emerald-400 hover:border-emerald-500 flex flex-col justify-between gap-2 text-left relative overflow-hidden cursor-pointer';
       card1.innerHTML = `
         <div class="flex items-center justify-between gap-2 w-full">
           <span class="bg-emerald-100 text-emerald-900 border-2 border-emerald-300 px-3 py-0.5 rounded-full text-xs sm:text-sm font-black">💡 因果句式 (2格配對)</span>
           <span class="bg-amber-100 text-amber-900 border-2 border-amber-300 px-3 py-0.5 rounded-full text-xs sm:text-sm font-black">⭐ ${causalSolved} / ${causalQuestions.length}</span>
         </div>
-        <div class="my-1.5 flex items-center justify-center gap-2 sm:gap-3">
-          <span class="bg-orange-500 text-white border-2 border-orange-300 px-4 py-1.5 sm:px-5 sm:py-2 rounded-2xl text-xl sm:text-3xl font-black tracking-widest shadow-sm">因為</span>
+        <div class="my-1 flex items-center justify-center gap-2 sm:gap-3">
+          <span class="bg-orange-500 text-white border-2 border-orange-300 px-4 py-1 sm:px-5 sm:py-1.5 rounded-2xl text-xl sm:text-3xl font-black tracking-widest shadow-sm">因為</span>
           <span class="text-xl sm:text-2xl font-black text-slate-300">➔</span>
-          <span class="bg-sky-500 text-white border-2 border-sky-300 px-4 py-1.5 sm:px-5 sm:py-2 rounded-2xl text-xl sm:text-3xl font-black tracking-widest shadow-sm">所以</span>
+          <span class="bg-sky-500 text-white border-2 border-sky-300 px-4 py-1 sm:px-5 sm:py-1.5 rounded-2xl text-xl sm:text-3xl font-black tracking-widest shadow-sm">所以</span>
         </div>
-        <div class="w-full h-28 sm:h-36 my-1 grid grid-cols-2 gap-2 p-1.5 bg-amber-50/70 rounded-2xl border border-amber-200">
-          <div class="rounded-xl overflow-hidden border-2 border-orange-200 bg-white">${renderCardVisual(cFirst.cause)}</div>
-          <div class="rounded-xl overflow-hidden border-2 border-sky-200 bg-white">${renderCardVisual(cFirst.effect)}</div>
+        <div class="w-full my-1 grid grid-cols-2 gap-2 p-1.5 bg-amber-50/70 rounded-2xl border border-amber-200">
+          <div class="rounded-xl overflow-hidden border-2 border-orange-200 bg-white">${renderCardVisual(cFirst.cause, false)}</div>
+          <div class="rounded-xl overflow-hidden border-2 border-sky-200 bg-white">${renderCardVisual(cFirst.effect, false)}</div>
         </div>
         <div class="w-full flex items-center justify-between gap-2 pt-1">
           <span class="text-xs sm:text-sm font-black text-slate-600 truncate">💬 因為出面落大雨，所以出街要擔遮</span>
@@ -540,26 +771,26 @@
       const card2 = document.createElement('button');
       card2.type = 'button';
       card2.onclick = () => enterSentencePatternTraining('sequence_4step');
-      card2.className = 'pattern-menu-card w-full h-full rounded-[2rem] p-3.5 sm:p-5 border-4 bg-white border-sky-400 hover:border-sky-500 flex flex-col justify-between text-left relative overflow-hidden cursor-pointer';
+      card2.className = 'pattern-menu-card w-full rounded-[2rem] p-4 sm:p-5 border-4 bg-white border-sky-400 hover:border-sky-500 flex flex-col justify-between gap-2 text-left relative overflow-hidden cursor-pointer';
       card2.innerHTML = `
         <div class="flex items-center justify-between gap-2 w-full">
           <span class="bg-sky-100 text-sky-900 border-2 border-sky-300 px-3 py-0.5 rounded-full text-xs sm:text-sm font-black">🔢 先後次序句式 (4步排序)</span>
           <span class="bg-amber-100 text-amber-900 border-2 border-amber-300 px-3 py-0.5 rounded-full text-xs sm:text-sm font-black">⭐ ${seqSolved} / ${seqQuestions.length}</span>
         </div>
-        <div class="my-1.5 flex flex-wrap items-center justify-center gap-1 sm:gap-1.5">
-          <span class="bg-orange-500 text-white border-2 border-orange-300 px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-xl text-base sm:text-xl font-black">1 首先</span>
+        <div class="my-1 flex flex-wrap items-center justify-center gap-1 sm:gap-1.5">
+          <span class="bg-orange-500 text-white border-2 border-orange-300 px-2.5 py-1 sm:px-3 sm:py-1 rounded-xl text-base sm:text-xl font-black">1 首先</span>
           <span class="text-slate-300 font-black text-sm">➔</span>
-          <span class="bg-sky-500 text-white border-2 border-sky-300 px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-xl text-base sm:text-xl font-black">2 ${word2Label}</span>
+          <span class="bg-sky-500 text-white border-2 border-sky-300 px-2.5 py-1 sm:px-3 sm:py-1 rounded-xl text-base sm:text-xl font-black">2 ${word2Label}</span>
           <span class="text-slate-300 font-black text-sm">➔</span>
-          <span class="bg-purple-500 text-white border-2 border-purple-300 px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-xl text-base sm:text-xl font-black">3 然後</span>
+          <span class="bg-purple-500 text-white border-2 border-purple-300 px-2.5 py-1 sm:px-3 sm:py-1 rounded-xl text-base sm:text-xl font-black">3 然後</span>
           <span class="text-slate-300 font-black text-sm">➔</span>
-          <span class="bg-emerald-500 text-white border-2 border-emerald-300 px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-xl text-base sm:text-xl font-black">4 最後</span>
+          <span class="bg-emerald-500 text-white border-2 border-emerald-300 px-2.5 py-1 sm:px-3 sm:py-1 rounded-xl text-base sm:text-xl font-black">4 最後</span>
         </div>
-        <div class="w-full h-28 sm:h-36 my-1 grid grid-cols-4 gap-1.5 p-1.5 bg-sky-50/80 rounded-2xl border border-sky-200">
-          <div class="rounded-lg overflow-hidden border-2 border-orange-300 bg-white">${renderCardVisual(sFirst[0])}</div>
-          <div class="rounded-lg overflow-hidden border-2 border-sky-300 bg-white">${renderCardVisual(sFirst[1])}</div>
-          <div class="rounded-lg overflow-hidden border-2 border-purple-300 bg-white">${renderCardVisual(sFirst[2])}</div>
-          <div class="rounded-lg overflow-hidden border-2 border-emerald-300 bg-white">${renderCardVisual(sFirst[3])}</div>
+        <div class="w-full my-1 grid grid-cols-4 gap-1.5 p-1.5 bg-sky-50/80 rounded-2xl border border-sky-200">
+          <div class="rounded-lg overflow-hidden border-2 border-orange-300 bg-white">${renderCardVisual(sFirst[0], false)}</div>
+          <div class="rounded-lg overflow-hidden border-2 border-sky-300 bg-white">${renderCardVisual(sFirst[1], false)}</div>
+          <div class="rounded-lg overflow-hidden border-2 border-purple-300 bg-white">${renderCardVisual(sFirst[2], false)}</div>
+          <div class="rounded-lg overflow-hidden border-2 border-emerald-300 bg-white">${renderCardVisual(sFirst[3], false)}</div>
         </div>
         <div class="w-full flex items-center justify-between gap-2 pt-1">
           <span class="text-xs sm:text-sm font-black text-slate-600 truncate">💬 洗手抹面、朝早返學、種盆栽、整三文治</span>
@@ -691,7 +922,7 @@
         { key: 'step4', num: 4, word: getSequenceWord(4), bg: 'bg-emerald-50/90 border-emerald-200',badgeBg: 'bg-emerald-500 border-emerald-300',slotBorder: 'border-emerald-300' }
       ];
 
-      container.className = 'grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3.5 h-full items-stretch';
+      container.className = 'grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 items-center';
       container.innerHTML = stepConfigs.map(cfg => {
         const placed = slots[cfg.key];
         const isTargeted = targetSlotKey === cfg.key;
@@ -702,20 +933,25 @@
         let slotInner = '';
         let slotClasses = '';
         if (!placed) {
-          slotClasses = `flex-1 w-full rounded-2xl border-3 border-dashed ${cfg.slotBorder} bg-white flex flex-col items-center justify-center p-1 cursor-pointer transition-all ${isTargeted ? 'slot-targeted' : ''}`;
-          slotInner = `<span class="text-2xl sm:text-4xl font-black text-slate-300">${cfg.num}</span>`;
+          slotClasses = `w-full rounded-2xl border-3 border-dashed ${cfg.slotBorder} bg-white flex flex-col items-center justify-center p-1.5 cursor-pointer transition-all ${isTargeted ? 'slot-targeted' : ''}`;
+          slotInner = `
+            <div class="img-fit-box bg-slate-50/60">
+              <span class="text-3xl sm:text-4xl font-black text-slate-300">${cfg.num}</span>
+            </div>
+            <div class="pt-1 text-center"><div class="text-xs sm:text-sm font-bold text-slate-300">請放圖卡</div></div>
+          `;
         } else {
           const borderStyle = isLocked ? 'border-emerald-500 ring-2 ring-emerald-300' : 'border-amber-400';
-          slotClasses = `flex-1 w-full rounded-2xl border-3 ${borderStyle} bg-white flex flex-col justify-between p-1 transition-all relative overflow-hidden cursor-pointer shadow-sm animate-pop`;
+          slotClasses = `w-full rounded-2xl border-3 ${borderStyle} bg-white flex flex-col justify-between p-1.5 transition-all relative overflow-hidden cursor-pointer shadow-sm animate-pop`;
           slotInner = `
-            ${isLocked ? `<span class="absolute top-1 right-1 z-10 bg-emerald-500 text-white text-[10px] sm:text-xs font-black px-1.5 py-0.5 rounded-full shadow">✅</span>` : ''}
-            <div class="w-full ${displayText ? 'h-[78%]' : 'h-full'} rounded-xl overflow-hidden bg-slate-50">${renderCardVisual(placed)}</div>
-            ${displayText ? `<div class="h-[22%] flex items-center justify-center pt-0.5"><div class="text-[11px] sm:text-sm font-black text-slate-800 leading-tight truncate px-1">${displayText}</div></div>` : ''}
+            ${isLocked ? `<span class="absolute top-2 right-2 z-10 bg-emerald-500 text-white text-[10px] sm:text-xs font-black px-1.5 py-0.5 rounded-full shadow">✅</span>` : ''}
+            ${renderCardVisual(placed, true)}
+            ${displayText ? `<div class="shrink-0 pt-1.5 pb-0.5 text-center"><div class="text-xs sm:text-base font-black text-slate-800 leading-tight truncate px-1">${displayText}</div></div>` : ''}
           `;
         }
 
         return `
-          <div class="${cfg.bg} rounded-2xl sm:rounded-3xl p-1.5 sm:p-2.5 border-2 flex flex-col gap-1.5 h-full min-h-[115px]">
+          <div class="${cfg.bg} rounded-2xl sm:rounded-3xl p-2 border-2 flex flex-col gap-1.5 overflow-hidden">
             <button type="button" onclick="speakText('${cfg.word}')" class="tactile-btn ${headerBadgeClass} text-white border px-2.5 py-1 rounded-xl flex items-center justify-center gap-1.5 shadow-sm shrink-0">
               <span class="w-5 h-5 rounded-full bg-white/25 text-xs font-black flex items-center justify-center">${cfg.num}</span>
               <span class="text-sm sm:text-lg font-black tracking-wider">${cfg.word}</span>
@@ -727,19 +963,19 @@
     }
 
     function renderCausalTopZone(container) {
-      container.className = 'grid grid-cols-2 gap-2.5 sm:gap-5 h-full items-stretch';
+      container.className = 'grid grid-cols-2 gap-3 sm:gap-5 items-center';
       container.innerHTML = `
-        <div class="bg-orange-50/90 rounded-3xl p-2 sm:p-3.5 border-3 border-orange-200 flex flex-col sm:flex-row items-center gap-2 sm:gap-3.5 h-full">
-          <button onclick="speakText('因為')" class="tactile-btn bg-orange-500 hover:bg-orange-400 text-white border-2 border-orange-300 rounded-2xl px-3.5 py-1.5 sm:px-5 sm:py-5 flex items-center justify-center shadow shrink-0">
-            <span class="text-lg sm:text-3xl font-black tracking-widest">因為</span>
+        <div class="bg-orange-50/90 rounded-3xl p-2.5 sm:p-3.5 border-3 border-orange-200 flex flex-col sm:flex-row items-center gap-2.5 sm:gap-3.5 overflow-hidden">
+          <button onclick="speakText('因為')" class="tactile-btn bg-orange-500 hover:bg-orange-400 text-white border-2 border-orange-300 rounded-2xl px-4 py-2 sm:px-5 sm:py-4 flex items-center justify-center shadow shrink-0">
+            <span class="text-lg sm:text-2xl font-black tracking-widest">因為</span>
           </button>
-          <div id="slot-cause" data-slot-key="cause" onclick="handleSlotTap('cause')" class="flex-1 w-full h-full min-h-[115px] rounded-2xl border-4 border-dashed border-orange-300 bg-white flex flex-col items-center justify-center p-1.5 transition-all relative overflow-hidden cursor-pointer"></div>
+          <div id="slot-cause" data-slot-key="cause" onclick="handleSlotTap('cause')" class="flex-1 w-full rounded-2xl border-4 border-dashed border-orange-300 bg-white flex flex-col items-center justify-center p-1.5 transition-all relative overflow-hidden cursor-pointer"></div>
         </div>
-        <div class="bg-sky-50/90 rounded-3xl p-2 sm:p-3.5 border-3 border-sky-200 flex flex-col sm:flex-row items-center gap-2 sm:gap-3.5 h-full">
-          <button onclick="speakText('所以')" class="tactile-btn bg-sky-500 hover:bg-sky-400 text-white border-2 border-sky-300 rounded-2xl px-3.5 py-1.5 sm:px-5 sm:py-5 flex items-center justify-center shadow shrink-0">
-            <span class="text-lg sm:text-3xl font-black tracking-widest">所以</span>
+        <div class="bg-sky-50/90 rounded-3xl p-2.5 sm:p-3.5 border-3 border-sky-200 flex flex-col sm:flex-row items-center gap-2.5 sm:gap-3.5 overflow-hidden">
+          <button onclick="speakText('所以')" class="tactile-btn bg-sky-500 hover:bg-sky-400 text-white border-2 border-sky-300 rounded-2xl px-4 py-2 sm:px-5 sm:py-4 flex items-center justify-center shadow shrink-0">
+            <span class="text-lg sm:text-2xl font-black tracking-widest">所以</span>
           </button>
-          <div id="slot-effect" data-slot-key="effect" onclick="handleSlotTap('effect')" class="flex-1 w-full h-full min-h-[115px] rounded-2xl border-4 border-dashed border-sky-300 bg-white flex flex-col items-center justify-center p-1.5 transition-all relative overflow-hidden cursor-pointer"></div>
+          <div id="slot-effect" data-slot-key="effect" onclick="handleSlotTap('effect')" class="flex-1 w-full rounded-2xl border-4 border-dashed border-sky-300 bg-white flex flex-col items-center justify-center p-1.5 transition-all relative overflow-hidden cursor-pointer"></div>
         </div>
       `;
 
@@ -749,14 +985,14 @@
         const isTargeted = targetSlotKey === slotKey;
         if (!placed) {
           const isCause = slotKey === 'cause';
-          slotEl.className = `flex-1 w-full h-full min-h-[115px] rounded-2xl border-4 border-dashed ${isCause ? 'border-orange-300' : 'border-sky-300'} bg-white flex items-center justify-center transition-all relative overflow-hidden cursor-pointer ${isTargeted ? 'slot-targeted' : ''}`;
-          slotEl.innerHTML = `<span class="text-4xl sm:text-5xl opacity-80">${isCause ? '❓' : '💡'}</span>`;
+          slotEl.className = `flex-1 w-full rounded-2xl border-4 border-dashed ${isCause ? 'border-orange-300' : 'border-sky-300'} bg-white flex flex-col items-center justify-center p-1.5 transition-all relative overflow-hidden cursor-pointer ${isTargeted ? 'slot-targeted' : ''}`;
+          slotEl.innerHTML = `<div class="img-fit-box bg-slate-50/60"><span class="text-4xl sm:text-5xl opacity-80">${isCause ? '❓' : '💡'}</span></div>`;
         } else {
           const displayText = getCardDisplayText(placed);
-          slotEl.className = `flex-1 w-full h-full min-h-[115px] rounded-2xl border-4 ${slotKey === 'cause' ? 'border-orange-400' : 'border-sky-400'} bg-white flex flex-col justify-between p-1.5 transition-all relative overflow-hidden cursor-pointer shadow-md animate-pop`;
+          slotEl.className = `flex-1 w-full rounded-2xl border-4 ${slotKey === 'cause' ? 'border-orange-400' : 'border-sky-400'} bg-white flex flex-col justify-between p-1.5 transition-all relative overflow-hidden cursor-pointer shadow-md animate-pop`;
           slotEl.innerHTML = `
-            <div class="w-full ${displayText ? 'h-[80%]' : 'h-full'} rounded-xl overflow-hidden bg-slate-50">${renderCardVisual(placed)}</div>
-            ${displayText ? `<div class="h-[20%] flex items-center justify-center pt-1"><div class="text-xs sm:text-lg font-black text-slate-800 leading-none truncate px-1">${displayText}</div></div>` : ''}
+            ${renderCardVisual(placed, true)}
+            ${displayText ? `<div class="shrink-0 pt-1.5 text-center"><div class="text-xs sm:text-lg font-black text-slate-800 leading-tight truncate px-1">${displayText}</div></div>` : ''}
           `;
         }
       });
@@ -769,10 +1005,10 @@
 
       const placedIds = new Set(Object.values(slots).filter(Boolean).map(c => c.id));
       const availableCards = trayCards.filter(c => !placedIds.has(c.id));
-      trayEl.className = 'flex flex-wrap justify-center items-stretch gap-2.5 sm:gap-4 h-full w-full';
+      trayEl.className = 'flex justify-center items-center gap-3 sm:gap-5 w-full';
 
       if (availableCards.length === 0) {
-        trayEl.innerHTML = `<div class="flex items-center justify-center h-full"><span class="text-4xl sm:text-5xl animate-bounce">🌟</span></div>`;
+        trayEl.innerHTML = `<div class="flex items-center justify-center py-6"><span class="text-4xl sm:text-5xl animate-bounce">🌟</span></div>`;
         return;
       }
 
@@ -781,26 +1017,31 @@
         const cardEl = document.createElement('div');
         cardEl.dataset.cardId = card.id;
         cardEl.onpointerdown = (e) => handleCardPointerDown(e, card);
-        cardEl.className = 'storybook-card cursor-pointer rounded-2xl sm:rounded-3xl p-1.5 sm:p-2 border-4 border-amber-300 bg-white hover:border-amber-400 flex flex-col justify-between h-full min-h-[115px] max-w-[240px] flex-1 basis-40 sm:basis-48 overflow-hidden';
+        cardEl.className = 'storybook-card cursor-pointer rounded-2xl sm:rounded-3xl p-2 border-4 border-amber-300 bg-white hover:border-amber-400 flex flex-col justify-between w-1/4 max-w-[245px] min-w-[140px] overflow-hidden';
         cardEl.innerHTML = `
-          <div class="w-full ${displayText ? 'h-[80%]' : 'h-full'} rounded-xl sm:rounded-2xl overflow-hidden bg-slate-50">${renderCardVisual(card)}</div>
-          ${displayText ? `<div class="h-[20%] flex items-center justify-center pt-0.5"><div class="text-xs sm:text-lg font-black text-slate-800 leading-tight truncate px-1">${displayText}</div></div>` : ''}
+          ${renderCardVisual(card, true)}
+          ${displayText ? `<div class="shrink-0 pt-1.5 pb-0.5 text-center"><div class="text-xs sm:text-base font-black text-slate-800 leading-tight truncate px-1">${displayText}</div></div>` : ''}
         `;
         trayEl.appendChild(cardEl);
       });
     }
 
     /********************************************************************
-     * 6. 觸控與拖放邏輯
+     * 7. 觸控與拖放邏輯
      ********************************************************************/
     function handleCardPointerDown(e, card) {
       if (e.button && e.button !== 0) return;
+      if (e.isPrimary === false) {
+        pointerDragState.active = false;
+        hideTouchDragGhost();
+        return;
+      }
       pointerDragState = { active: true, cardId: card.id, startX: e.clientX, startY: e.clientY, moved: false, hoveredSlotKey: null };
     }
 
     function setupGlobalPointerListeners() {
       window.addEventListener('pointermove', (e) => {
-        if (!pointerDragState.active) return;
+        if (!pointerDragState.active || zoomState.isOpen) return;
         const dx = e.clientX - pointerDragState.startX;
         const dy = e.clientY - pointerDragState.startY;
         if (!pointerDragState.moved && Math.hypot(dx, dy) > 10) {
@@ -820,6 +1061,7 @@
         pointerDragState.active = false;
         hideTouchDragGhost();
         clearSlotHoverHighlights();
+        if (zoomState.isOpen) return;
         const card = trayCards.find(c => c.id === cardId);
         if (!card) return;
         if (moved && hoveredSlotKey && !lockedCorrectSlots.has(hoveredSlotKey)) placeCardIntoSlot(card, hoveredSlotKey);
@@ -874,9 +1116,9 @@
       if (!ghost) return;
       const displayText = getCardDisplayText(card);
       ghost.innerHTML = `
-        <div class="w-full h-full rounded-2xl p-1.5 bg-white border-4 border-amber-400 shadow-2xl flex flex-col justify-between overflow-hidden">
-          <div class="w-full ${displayText ? 'h-[78%]' : 'h-full'} rounded-xl overflow-hidden bg-slate-100">${renderCardVisual(card)}</div>
-          ${displayText ? `<div class="text-xs font-black text-slate-800 text-center truncate px-1">${displayText}</div>` : ''}
+        <div class="w-full rounded-2xl p-1.5 bg-white border-4 border-amber-400 shadow-2xl flex flex-col justify-between overflow-hidden">
+          ${renderCardVisual(card, false)}
+          ${displayText ? `<div class="shrink-0 pt-1 text-xs font-black text-slate-800 text-center truncate px-1">${displayText}</div>` : ''}
         </div>
       `;
       ghost.style.left = `${x}px`; ghost.style.top = `${y}px`;
@@ -908,7 +1150,7 @@
     }
 
     /********************************************************************
-     * 7. 自動批改與獎勵
+     * 8. 自動批改與獎勵
      ********************************************************************/
     function scheduleAutoCheckIfFull() {
       if (autoCheckTimer) clearTimeout(autoCheckTimer);
@@ -948,8 +1190,8 @@
       const content = document.getElementById('actionOverlayContent');
       bar.classList.remove('hidden');
       content.innerHTML = `
-        <button onclick="returnWrongSequenceCards()" class="tactile-btn bg-amber-500 hover:bg-amber-400 text-white border-3 border-white px-4 sm:px-6 py-2 rounded-full font-black text-sm sm:text-lg shadow-xl flex items-center gap-1.5 animate-pop"><span>↩️</span><span>重排錯嘅卡</span></button>
-        <button onclick="autoFixSequenceCards()" class="tactile-btn bg-orange-500 hover:bg-orange-400 text-white border-3 border-white px-4 sm:px-6 py-2 rounded-full font-black text-sm sm:text-lg shadow-xl flex items-center gap-1.5 animate-pop"><span>🔄</span><span>幫手調啱位置</span></button>
+        <button onclick="returnWrongSequenceCards()" class="tactile-btn bg-amber-500 hover:bg-amber-400 text-white border-3 border-white px-4 sm:px-6 py-1.5 rounded-full font-black text-sm sm:text-base shadow-xl flex items-center gap-1.5 animate-pop"><span>↩️</span><span>重排錯嘅卡</span></button>
+        <button onclick="autoFixSequenceCards()" class="tactile-btn bg-orange-500 hover:bg-orange-400 text-white border-3 border-white px-4 sm:px-6 py-1.5 rounded-full font-black text-sm sm:text-base shadow-xl flex items-center gap-1.5 animate-pop"><span>🔄</span><span>幫手調啱位置</span></button>
       `;
     }
 
@@ -989,7 +1231,7 @@
         const bar = document.getElementById('actionOverlayBar');
         const content = document.getElementById('actionOverlayContent');
         bar.classList.remove('hidden');
-        content.innerHTML = `<button onclick="swapCausalCards()" class="tactile-btn bg-orange-500 hover:bg-orange-400 text-white border-4 border-white px-7 py-2.5 rounded-full font-black text-base sm:text-xl shadow-xl flex items-center gap-2 animate-pop"><span>🔄</span><span>調轉圖卡</span></button>`;
+        content.innerHTML = `<button onclick="swapCausalCards()" class="tactile-btn bg-orange-500 hover:bg-orange-400 text-white border-4 border-white px-6 py-2 rounded-full font-black text-base sm:text-lg shadow-xl flex items-center gap-2 animate-pop"><span>🔄</span><span>調轉圖卡</span></button>`;
         return;
       }
       playSound('gentleHint');
@@ -1011,7 +1253,7 @@
       const bar = document.getElementById('actionOverlayBar');
       const content = document.getElementById('actionOverlayContent');
       bar.classList.remove('hidden');
-      content.innerHTML = `<button onclick="nextQuestion()" class="tactile-btn bg-emerald-500 hover:bg-emerald-400 text-white border-4 border-white px-7 py-2.5 rounded-full font-black text-lg sm:text-2xl shadow-xl flex items-center gap-2.5 animate-bounce"><span>下一題</span><span>➡️</span></button>`;
+      content.innerHTML = `<button onclick="nextQuestion()" class="tactile-btn bg-emerald-500 hover:bg-emerald-400 text-white border-4 border-white px-6 py-2 rounded-full font-black text-base sm:text-xl shadow-xl flex items-center gap-2 animate-bounce"><span>下一題</span><span>➡️</span></button>`;
     }
 
     function hideActionOverlay() {
