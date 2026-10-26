@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>互動句式語言訓練百寶箱 (因為所以・首先跟住然後最後)</title>
+  <title>互動句式語言訓練百寶箱</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@700;900&display=swap" rel="stylesheet">
+  <!-- 自動載入你同一個資料夾入面嘅 questions.js 題庫檔 -->
+  <script src="questions.js"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -14,17 +16,11 @@
       -webkit-touch-callout: none;
       -webkit-tap-highlight-color: transparent;
     }
-
     html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100dvh;
-      overflow: hidden;
+      margin: 0; padding: 0; width: 100%; height: 100dvh; overflow: hidden;
       font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
       background: linear-gradient(180deg, #FFFBEB 0%, #FEF3C7 50%, #E0F2FE 100%);
     }
-
     .tactile-btn {
       transition: transform 0.14s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.14s ease;
       box-shadow: 0 5px 0 rgba(15, 23, 42, 0.15);
@@ -34,9 +30,8 @@
       transform: translateY(4px);
       box-shadow: 0 1px 0 rgba(15, 23, 42, 0.15);
     }
-
     .pattern-menu-card {
-      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
       box-shadow: 0 10px 0 rgba(15, 23, 42, 0.1), 0 14px 28px rgba(15, 23, 42, 0.08);
       touch-action: manipulation;
     }
@@ -44,16 +39,12 @@
       transform: translateY(4px) scale(0.985);
       box-shadow: 0 3px 0 rgba(15, 23, 42, 0.1);
     }
-
     .storybook-card {
-      transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease, border-color 0.18s ease;
+      transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease;
       box-shadow: 0 7px 0 rgba(15, 23, 42, 0.1), 0 10px 20px rgba(15, 23, 42, 0.07);
       touch-action: none;
     }
-    .storybook-card:active {
-      transform: scale(0.97);
-    }
-
+    .storybook-card:active { transform: scale(0.97); }
     @keyframes slot-pulse {
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.02); }
@@ -63,13 +54,11 @@
       box-shadow: 0 0 0 5px #FBBF24 !important;
       background-color: #FFFBEB !important;
     }
-
     .slot-hover-target {
       transform: scale(1.03) !important;
       box-shadow: 0 0 0 5px #F59E0B !important;
       background-color: #FEF3C7 !important;
     }
-
     @keyframes karaoke-pop {
       0% { transform: scale(1); }
       50% { transform: scale(1.04); }
@@ -81,7 +70,6 @@
       z-index: 30;
       animation: karaoke-pop 0.35s ease-out forwards;
     }
-
     @keyframes gentle-shake {
       0%, 100% { transform: translateX(0); }
       20% { transform: translateX(-9px) rotate(-1.5deg); }
@@ -89,19 +77,13 @@
       60% { transform: translateX(-6px) rotate(-1deg); }
       80% { transform: translateX(6px) rotate(1deg); }
     }
-    .shake-feedback {
-      animation: gentle-shake 0.55s ease-in-out;
-    }
-
+    .shake-feedback { animation: gentle-shake 0.55s ease-in-out; }
     @keyframes pop-in {
       0% { transform: scale(0.9); opacity: 0; }
       70% { transform: scale(1.02); }
       100% { transform: scale(1); opacity: 1; }
     }
-    .animate-pop {
-      animation: pop-in 0.22s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-    }
-
+    .animate-pop { animation: pop-in 0.22s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
     .thin-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
     .thin-scroll::-webkit-scrollbar-track { background: transparent; }
     .thin-scroll::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.45); border-radius: 9999px; }
@@ -109,1052 +91,231 @@
 </head>
 <body class="w-full h-full flex flex-col justify-between overflow-hidden select-none">
 
-  <!-- Confetti Canvas Overlay -->
   <canvas id="confettiCanvas" class="fixed inset-0 pointer-events-none z-50"></canvas>
-
-  <!-- Floating Drag Ghost Container for Touch Pointer Dragging -->
   <div id="touchDragGhost" class="fixed pointer-events-none z-50 hidden" style="width: 175px; height: 165px; transform: translate(-50%, -50%) rotate(2deg);"></div>
 
-  <!-- ===================================================================
-       VIEW 1: 🏠 句式練習主頁 (HOME MENU SCREEN)
-       =================================================================== -->
+  <!-- VIEW 1: 🏠 句式練習主頁 -->
   <div id="homeScreen" class="w-full h-full flex flex-col justify-between px-3.5 sm:px-8 py-3 sm:py-5 max-w-6xl mx-auto">
-    
-    <!-- Top Header -->
     <header class="shrink-0 flex items-center justify-between gap-2 pb-1">
       <div class="flex items-center gap-2.5 sm:gap-3.5">
-        <div class="w-11 h-11 sm:w-14 sm:h-14 rounded-2xl bg-amber-400 border-3 border-amber-500 shadow flex items-center justify-center text-2xl sm:text-3xl">
-          🗣️
-        </div>
+        <div class="w-11 h-11 sm:w-14 sm:h-14 rounded-2xl bg-amber-400 border-3 border-amber-500 shadow flex items-center justify-center text-2xl sm:text-3xl">🗣️</div>
         <div>
           <h1 class="text-xl sm:text-3xl font-black text-slate-800 tracking-tight">句式練習百寶箱</h1>
           <p class="text-xs sm:text-sm font-bold text-slate-500">撳一下句式大圖卡開始練習</p>
         </div>
       </div>
-
       <div class="flex items-center gap-2 sm:gap-3">
         <div class="bg-white/95 border-2 border-amber-300 rounded-full px-3.5 sm:px-5 py-1.5 flex items-center gap-1.5 shadow-sm">
           <span class="text-lg sm:text-2xl">⭐</span>
           <span id="homeStarCount" class="text-base sm:text-xl font-black text-slate-800">0</span>
         </div>
-
-        <button onclick="openTeacherModal()" aria-label="家長及老師設定" class="tactile-btn w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/90 hover:bg-white text-slate-600 border-2 border-slate-300 flex items-center justify-center text-xl">
-          ⚙️
-        </button>
+        <button onclick="openTeacherModal()" aria-label="設定" class="tactile-btn w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/90 hover:bg-white text-slate-600 border-2 border-slate-300 flex items-center justify-center text-xl">⚙️</button>
       </div>
     </header>
 
-    <!-- Main Sentence Pattern Cards Grid -->
     <main class="flex-1 min-h-0 flex items-center justify-center py-1.5 sm:py-3 overflow-y-auto thin-scroll">
-      <div id="patternMenuGrid" class="w-full h-full max-h-[580px] grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 items-stretch">
-        <!-- Populated by renderHomeScreen() -->
-      </div>
+      <div id="patternMenuGrid" class="w-full h-full max-h-[580px] grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 items-stretch"></div>
     </main>
 
-    <!-- Bottom Voice Prompt Banner -->
     <footer class="shrink-0 pt-1 text-center">
       <div class="inline-flex items-center gap-2 bg-white/85 border-2 border-amber-200 px-4 py-1.5 rounded-full text-xs sm:text-sm font-black text-slate-600 shadow-sm">
         <span>👆</span>
-        <span id="homeHintText">請選擇「因為…所以…」或者「首先…跟住…然後…最後…」開始練習！</span>
+        <span>請選擇「因為…所以…」或者「首先…跟住…然後…最後…」開始練習！</span>
       </div>
     </footer>
   </div>
 
-  <!-- ===================================================================
-       VIEW 2: 🎯 句式互動訓練畫面 (SUPPORTS BOTH 2-SLOT & 4-SLOT MODES)
-       =================================================================== -->
+  <!-- VIEW 2: 🎯 句式互動訓練畫面 -->
   <div id="trainingScreen" class="hidden w-full h-full flex flex-col justify-between overflow-hidden">
-    
-    <!-- Minimalist Training Top Bar -->
     <header class="shrink-0 px-2.5 sm:px-6 pt-2 pb-1 flex items-center justify-between z-20 max-w-6xl w-full mx-auto gap-1.5">
-      
-      <!-- Left: Home Button + Quick Pattern Switcher + Question Navigation -->
       <div class="flex items-center gap-1.5 sm:gap-2">
-        <button onclick="goToHomeScreen()" aria-label="返回主頁" class="tactile-btn bg-white hover:bg-amber-50 text-slate-800 border-2 border-amber-300 px-2.5 sm:px-3.5 h-10 sm:h-11 rounded-full flex items-center gap-1 font-black text-xs sm:text-base">
-          <span class="text-base sm:text-lg">🏠</span>
-          <span class="hidden sm:inline">主頁</span>
+        <button onclick="goToHomeScreen()" class="tactile-btn bg-white hover:bg-amber-50 text-slate-800 border-2 border-amber-300 px-2.5 sm:px-3.5 h-10 sm:h-11 rounded-full flex items-center gap-1 font-black text-xs sm:text-base">
+          <span class="text-base sm:text-lg">🏠</span><span class="hidden sm:inline">主頁</span>
         </button>
-
-        <!-- Quick Switch Badge between the 2 Active Patterns -->
         <button id="activePatternBadgeBtn" onclick="switchActivePatternQuick()" class="tactile-btn bg-amber-100 hover:bg-amber-200 text-amber-950 border-2 border-amber-300 px-2.5 sm:px-3.5 h-10 sm:h-11 rounded-full flex items-center gap-1 font-black text-xs sm:text-sm">
-          <span id="activePatternBadgeText">因為…所以…</span>
-          <span class="text-[10px] opacity-70">🔄</span>
+          <span id="activePatternBadgeText">因為…所以…</span><span class="text-[10px] opacity-70">🔄</span>
         </button>
-
-        <button onclick="prevQuestion()" aria-label="上一題" class="tactile-btn w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white hover:bg-amber-50 text-slate-700 border-2 border-amber-300 flex items-center justify-center font-black text-sm sm:text-lg">
-          ◀
-        </button>
-
+        <button onclick="prevQuestion()" class="tactile-btn w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white hover:bg-amber-50 text-slate-700 border-2 border-amber-300 flex items-center justify-center font-black text-sm sm:text-lg">◀</button>
         <div class="bg-white/95 border-2 border-amber-300 rounded-full px-2.5 sm:px-3.5 py-1 flex items-center gap-1 shadow-sm">
           <span class="text-sm sm:text-lg">⭐</span>
           <span id="progressText" class="text-xs sm:text-lg font-black text-slate-800">1 / 8</span>
         </div>
-
-        <button onclick="nextQuestion()" aria-label="下一題" class="tactile-btn w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white hover:bg-amber-50 text-slate-700 border-2 border-amber-300 flex items-center justify-center font-black text-sm sm:text-lg">
-          ▶
-        </button>
+        <button onclick="nextQuestion()" class="tactile-btn w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white hover:bg-amber-50 text-slate-700 border-2 border-amber-300 flex items-center justify-center font-black text-sm sm:text-lg">▶</button>
       </div>
 
-      <!-- Right: AI Generation Progress/Redraw Button + Big Clear "🔊 讀句子" Button + Subtle "⚙️" Teacher Settings Button -->
       <div class="flex items-center gap-1.5 sm:gap-2">
-        <button id="topAiStatusBtn" onclick="ensureCurrentQuestionAIImages(true)" class="hidden">
-       <span id="topAiStatusIcon" class="text-sm sm:text-base">🎨</span>
-       <span id="topAiStatusText">重繪AI圖</span>
-     </button>
-
-        <button onclick="speakCurrentSentence(true)" class="tactile-btn bg-amber-400 hover:bg-amber-300 text-slate-900 border-2 border-amber-500 px-3 sm:px-5 h-10 sm:h-11 rounded-full font-black text-xs sm:text-lg flex items-center gap-1 sm:gap-1.5">
-          <span class="text-base sm:text-xl">🔊</span>
-          <span>讀句子</span>
+        <button onclick="speakCurrentSentence(true)" class="tactile-btn bg-amber-400 hover:bg-amber-300 text-slate-900 border-2 border-amber-500 px-3.5 sm:px-5 h-10 sm:h-11 rounded-full font-black text-xs sm:text-lg flex items-center gap-1 sm:gap-1.5">
+          <span class="text-base sm:text-xl">🔊</span><span>讀句子</span>
         </button>
-
-        <button onclick="openTeacherModal()" aria-label="家長及老師設定" class="tactile-btn w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/90 hover:bg-white text-slate-600 border-2 border-slate-300 flex items-center justify-center text-base sm:text-lg">
-          ⚙️
-        </button>
+        <button onclick="openTeacherModal()" class="tactile-btn w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/90 hover:bg-white text-slate-600 border-2 border-slate-300 flex items-center justify-center text-base sm:text-lg">⚙️</button>
       </div>
-
     </header>
 
-    <!-- Main Workspace (90% Screen Space: Top Sentence Zone + Bottom Big Cards) -->
     <main class="flex-1 min-h-0 px-2.5 sm:px-6 pb-2.5 sm:pb-4 pt-1 flex flex-col justify-between gap-2 sm:gap-3.5 max-w-6xl w-full mx-auto">
-
-      <!-- TOP HALF: Sentence Dropzone (Dynamically adapts for 2-slot or 4-slot sequence) -->
       <section class="flex-1 min-h-0 bg-white/90 rounded-[1.75rem] sm:rounded-[2rem] p-2 sm:p-3.5 border-4 border-amber-200 shadow-sm flex flex-col justify-center relative">
-        
-        <div id="topSlotsContainer" class="w-full h-full">
-          <!-- Dynamically populated by renderWorkspace() -->
-        </div>
-
-        <!-- Floating Action Overlay Pill (Appears when Reversed 🔄, Partially Correct, or Solved ➡️) -->
+        <div id="topSlotsContainer" class="w-full h-full"></div>
         <div id="actionOverlayBar" class="hidden absolute inset-x-0 -bottom-3.5 sm:-bottom-4 flex justify-center z-30 pointer-events-none">
           <div id="actionOverlayContent" class="pointer-events-auto flex items-center gap-2"></div>
         </div>
-
       </section>
 
-      <!-- BOTTOM HALF: Distraction-Free Picture Card Tray -->
       <section class="flex-1 min-h-0 bg-white/85 rounded-[1.75rem] sm:rounded-[2rem] p-2 sm:p-3.5 border-4 border-amber-200/90 shadow-sm flex flex-col justify-center">
-        <div id="cardTray" class="w-full h-full">
-          <!-- Populated dynamically with large 82% picture + 18% text cards -->
-        </div>
+        <div id="cardTray" class="w-full h-full"></div>
       </section>
-
     </main>
-
   </div>
 
-  <!-- ===================================================================
-       3. ⚙️ 老師／家長設定面板 (Modal Drawer)
-       =================================================================== -->
+  <!-- VIEW 3: ⚙️ 老師／家長設定面板 -->
   <div id="teacherModal" onclick="if(event.target === this) closeTeacherModal()" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-5">
-    <div class="bg-white rounded-[2rem] max-w-2xl w-full max-h-[90dvh] overflow-y-auto thin-scroll border-4 border-slate-300 shadow-2xl p-4 sm:p-6 space-y-4 animate-pop">
-      
-      <!-- Modal Header -->
+    <div class="bg-white rounded-[2rem] max-w-xl w-full max-h-[90dvh] overflow-y-auto thin-scroll border-4 border-slate-300 shadow-2xl p-4 sm:p-6 space-y-4 animate-pop">
       <div class="flex items-center justify-between border-b-2 border-slate-100 pb-3">
         <div class="flex items-center gap-2.5">
           <span class="text-2xl">⚙️</span>
           <div>
-            <h2 class="text-lg sm:text-xl font-black text-slate-800">家長／言語治療師設定面板</h2>
-            <p class="text-xs font-bold text-slate-500">切換句式、調整難度、語音及使用 AI 生成新圖卡（已獲 ⭐ <span id="teacherStarCount">0</span> 粒星）</p>
+            <h2 class="text-lg sm:text-xl font-black text-slate-800">家長／老師設定面板</h2>
+            <p class="text-xs font-bold text-slate-500">切換句式、難度及語音（已獲 ⭐ <span id="teacherStarCount">0</span> 粒星）</p>
           </div>
         </div>
         <button onclick="closeTeacherModal()" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-lg flex items-center justify-center">✕</button>
       </div>
 
-      <!-- 0. 快速切換句式模式 -->
       <div class="bg-amber-50 p-3.5 rounded-2xl border-2 border-amber-200 space-y-2">
         <div class="text-xs sm:text-sm font-black text-amber-950">🗣️ 選擇練習句式：</div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <button type="button" id="modalPatCausalBtn" onclick="selectPatternFromModal('because_therefore')" class="py-2.5 px-3 rounded-xl font-black text-xs sm:text-sm border-2 text-left flex items-center justify-between">
-            <span>1️⃣ 因為 … 所以 … (因果2格)</span>
-            <span>▶️</span>
+            <span>1️⃣ 因為 … 所以 … (因果2格)</span><span>▶️</span>
           </button>
           <button type="button" id="modalPatSeqBtn" onclick="selectPatternFromModal('sequence_4step')" class="py-2.5 px-3 rounded-xl font-black text-xs sm:text-sm border-2 text-left flex items-center justify-between">
-            <span>2️⃣ 首先…跟住…然後…最後… (次序4格)</span>
-            <span>▶️</span>
+            <span>2️⃣ 首先…跟住…然後…最後… (次序4格)</span><span>▶️</span>
           </button>
         </div>
       </div>
 
-      <!-- 1. 題目快速選擇 -->
       <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-2">
         <label class="block text-xs sm:text-sm font-black text-slate-700">📚 選擇當前句式練習題目：</label>
-        <select id="questionSelect" onchange="jumpToQuestion(this.value)" class="w-full bg-white border-2 border-amber-300 text-slate-800 font-black rounded-xl px-3 py-2 text-sm focus:outline-none">
-        </select>
+        <select id="questionSelect" onchange="jumpToQuestion(this.value)" class="w-full bg-white border-2 border-amber-300 text-slate-800 font-black rounded-xl px-3 py-2 text-sm focus:outline-none"></select>
       </div>
 
-      <!-- 2. 難度切換 (初階 / 中階 / 高階) -->
       <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-2">
         <div class="text-xs sm:text-sm font-black text-slate-700">🎯 訓練難度階段：</div>
         <div class="grid grid-cols-3 gap-2">
-          <button type="button" onclick="setDifficulty(1)" id="diffBtn1" class="py-2.5 px-2 rounded-xl font-black text-xs sm:text-sm border-2 transition-all">
-            🌱 初階 (基礎輔助)
-          </button>
-          <button type="button" onclick="setDifficulty(2)" id="diffBtn2" class="py-2.5 px-2 rounded-xl font-black text-xs sm:text-sm border-2 transition-all">
-            🌿 中階 (進階挑戰)
-          </button>
-          <button type="button" onclick="setDifficulty(3)" id="diffBtn3" class="py-2.5 px-2 rounded-xl font-black text-xs sm:text-sm border-2 transition-all">
-            🌳 高階 (完整重組)
-          </button>
+          <button type="button" onclick="setDifficulty(1)" id="diffBtn1" class="py-2.5 px-2 rounded-xl font-black text-xs sm:text-sm border-2">🌱 初階 (基礎輔助)</button>
+          <button type="button" onclick="setDifficulty(2)" id="diffBtn2" class="py-2.5 px-2 rounded-xl font-black text-xs sm:text-sm border-2">🌿 中階 (進階挑戰)</button>
+          <button type="button" onclick="setDifficulty(3)" id="diffBtn3" class="py-2.5 px-2 rounded-xl font-black text-xs sm:text-sm border-2">🌳 高階 (完整重組)</button>
         </div>
         <p id="diffDescText" class="text-[11px] font-bold text-slate-500"></p>
       </div>
 
-      <!-- 3. 文字顯示模式 & 語音設定 -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-2">
           <div class="text-xs sm:text-sm font-black text-slate-700">💬 圖卡文字顯示模式：</div>
           <div class="grid grid-cols-3 gap-1.5">
-            <button type="button" onclick="setTextMode('cantonese')" id="tmBtnCantonese" class="py-2 px-1.5 rounded-xl font-black text-xs border-2">
-              廣東話口語
-            </button>
-            <button type="button" onclick="setTextMode('written')" id="tmBtnWritten" class="py-2 px-1.5 rounded-xl font-black text-xs border-2">
-              標準書面語
-            </button>
-            <button type="button" onclick="setTextMode('none')" id="tmBtnNone" class="py-2 px-1.5 rounded-xl font-black text-xs border-2">
-              🖼️ 純圖卡
-            </button>
+            <button type="button" onclick="setTextMode('cantonese')" id="tmBtnCantonese" class="py-2 px-1.5 rounded-xl font-black text-xs border-2">廣東話口語</button>
+            <button type="button" onclick="setTextMode('written')" id="tmBtnWritten" class="py-2 px-1.5 rounded-xl font-black text-xs border-2">標準書面語</button>
+            <button type="button" onclick="setTextMode('none')" id="tmBtnNone" class="py-2 px-1.5 rounded-xl font-black text-xs border-2">🖼️ 純圖卡</button>
           </div>
         </div>
 
         <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-2">
           <div class="text-xs sm:text-sm font-black text-slate-700">🔊 語音與語速設定：</div>
           <div class="flex items-center gap-2">
-            <button type="button" onclick="toggleVoiceLang()" id="voiceLangBtn" class="flex-1 py-2 px-3 rounded-xl font-black text-xs bg-purple-100 text-purple-900 border-2 border-purple-300">
-              🔊 粵語發音
-            </button>
-            <button type="button" onclick="toggleVoiceSpeed()" id="voiceSpeedBtn" class="flex-1 py-2 px-3 rounded-xl font-black text-xs bg-amber-100 text-amber-900 border-2 border-amber-300">
-              🐢 慢速朗讀
-            </button>
+            <button type="button" onclick="toggleVoiceLang()" id="voiceLangBtn" class="flex-1 py-2 px-3 rounded-xl font-black text-xs bg-purple-100 text-purple-900 border-2 border-purple-300">🔊 粵語發音</button>
+            <button type="button" onclick="toggleVoiceSpeed()" id="voiceSpeedBtn" class="flex-1 py-2 px-3 rounded-xl font-black text-xs bg-amber-100 text-amber-900 border-2 border-amber-300">🐢 慢速朗讀</button>
           </div>
         </div>
       </div>
 
-      <!-- 4. 🎨 AI 圖卡畫風與重新生成 -->
-      <div class="bg-fuchsia-50/80 p-3.5 rounded-2xl border-2 border-fuchsia-200 space-y-3">
-        <div class="flex flex-wrap items-center justify-between gap-2">
-          <div>
-            <div class="text-xs sm:text-sm font-black text-fuchsia-950">🎨 AI 插畫風格與重繪</div>
-            <div id="aiTeacherStatus" class="text-[11px] font-bold text-fuchsia-700">內置高清繪本圖卡，亦可一鍵呼叫 AI 生成插畫</div>
-          </div>
-          <button type="button" onclick="regenerateCurrentQuestionImages()" class="tactile-btn bg-fuchsia-600 hover:bg-fuchsia-500 text-white px-3.5 py-1.5 rounded-xl font-black text-xs flex items-center gap-1">
-            <span>🔄</span><span>AI 生成本題插畫</span>
-          </button>
-        </div>
-
-        <div id="styleOptionsGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-2"></div>
-      </div>
-
-      <!-- 5. ✨ AI 智能新增自訂題目 (支援「因為…所以…」及「首先…跟住…然後…最後…」) -->
-      <div class="bg-indigo-50/80 p-3.5 rounded-2xl border-2 border-indigo-200 space-y-3">
-        <div class="flex flex-wrap items-center justify-between gap-2">
-          <div class="text-xs sm:text-sm font-black text-indigo-950">✨ AI 智能新增自訂題目（自動生成文字＋AI圖卡）：</div>
-          <div class="flex items-center gap-1 bg-white p-1 rounded-xl border border-indigo-200">
-            <button type="button" id="aiGenModeCausalBtn" onclick="setAiWorkshopPattern('because_therefore')" class="px-2.5 py-1 rounded-lg text-xs font-black transition-all">因為…所以…</button>
-            <button type="button" id="aiGenModeSeqBtn" onclick="setAiWorkshopPattern('sequence_4step')" class="px-2.5 py-1 rounded-lg text-xs font-black transition-all">首先…跟住…然後…最後…</button>
-          </div>
-        </div>
-        
-        <div class="flex flex-wrap gap-1.5">
-          <button type="button" onclick="fillTopicChip('自己着鞋襪出門口')" class="px-2.5 py-1 rounded-full bg-white hover:bg-indigo-100 text-indigo-800 border border-indigo-300 text-xs font-bold">👟 着鞋襪出門</button>
-          <button type="button" onclick="fillTopicChip('沖涼洗白白步驟')" class="px-2.5 py-1 rounded-full bg-white hover:bg-indigo-100 text-indigo-800 border border-indigo-300 text-xs font-bold">🛁 沖涼四部曲</button>
-          <button type="button" onclick="fillTopicChip('唔肯刷牙食太多糖')" class="px-2.5 py-1 rounded-full bg-white hover:bg-indigo-100 text-indigo-800 border border-indigo-300 text-xs font-bold">🦷 唔肯刷牙</button>
-          <button type="button" onclick="fillTopicChip('借圖書同睇書習慣')" class="px-2.5 py-1 rounded-full bg-white hover:bg-indigo-100 text-indigo-800 border border-indigo-300 text-xs font-bold">📖 睇圖書</button>
-        </div>
-
-        <div class="flex flex-col sm:flex-row gap-2">
-          <input type="text" id="aiTopicInput" placeholder="輸入日常主題（例如：沖涼步驟、借圖書、唔肯刷牙）..." class="flex-1 px-3.5 py-2 rounded-xl border-2 border-indigo-300 text-sm font-bold bg-white focus:outline-none" />
-          <button type="button" id="aiGenerateTopicBtn" onclick="handleGenerateFromTopic()" class="tactile-btn bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl font-black text-xs sm:text-sm shrink-0">
-            ✨ AI 生成新題目
-          </button>
-        </div>
-
-        <div id="workshopStatusBox" class="hidden rounded-xl p-2.5 bg-white border border-indigo-200 text-indigo-900 text-xs font-bold flex items-center gap-2">
-          <div class="w-4 h-4 rounded-full border-2 border-indigo-600 border-t-transparent animate-spin shrink-0"></div>
-          <div id="workshopStatusText">正在生成...</div>
-        </div>
-      </div>
-
-      <!-- 6. 主頁顯示未來預告句式開關 -->
-      <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200 flex items-center justify-between gap-2">
-        <span class="text-xs font-black text-slate-600">🏠 主頁顯示未開放預告句式（「如果…就…」、「雖然…但是…」）</span>
-        <button type="button" id="showFutureToggleBtn" onclick="toggleShowFuturePatterns()" class="px-3 py-1.5 rounded-xl font-black text-xs border-2">
-          已隱藏
-        </button>
-      </div>
-
-      <button type="button" onclick="closeTeacherModal()" class="tactile-btn w-full bg-slate-800 hover:bg-slate-700 text-white py-3 rounded-2xl font-black text-base">
-        完成設定並返回
-      </button>
-
+      <button type="button" onclick="closeTeacherModal()" class="tactile-btn w-full bg-slate-800 hover:bg-slate-700 text-white py-3 rounded-2xl font-black text-base">完成設定並返回</button>
     </div>
   </div>
 
   <script>
     /********************************************************************
-     * 1. RICH PARAMETERIZED STORYBOOK SVG ILLUSTRATION ENGINE
+     * 1. 智能圖片讀取引擎 (自動支援 .jpg / .png / .webp + 防快取版本號)
      ********************************************************************/
-    function renderCuteSceneSVG(sceneKey) {
-      const map = {
-        rain_cause:   ['#475569', '#334155', '#FB7185', 'surprised', 'rain_window'],
-        rain_effect:  ['#BAE6FD', '#86EFAC', '#FACC15', 'happy',     'umbrella'],
-        hungry_cause: ['#FEF3C7', '#FDE68A', '#60A5FA', 'sad',       'hungry_tummy'],
-        hungry_effect:['#FFFBEB', '#FDBA74', '#34D399', 'happy',     'hot_noodles'],
-        dirty_cause:  ['#FEF9C3', '#FDE047', '#A78BFA', 'surprised', 'muddy_hands'],
-        dirty_effect: ['#E0F2FE', '#BAE6FD', '#38BDF8', 'happy',     'wash_towel'],
-        hot_cause:    ['#FFEDD5', '#FED7AA', '#FB923C', 'sweat',     'hot_sun'],
-        hot_effect:   ['#E0F2FE', '#BAE6FD', '#38BDF8', 'happy',     'ice_cream'],
-        sleepy_cause: ['#1E1B4B', '#312E81', '#818CF8', 'sleepy',    'moon_stars'],
-        sleepy_effect:['#312E81', '#1E1B4B', '#60A5FA', 'sleepy',    'cozy_bed'],
-        fall_cause:   ['#BAE6FD', '#86EFAC', '#FB7185', 'cry',       'scraped_knee'],
-        fall_effect:  ['#FEF3C7', '#FDE68A', '#34D399', 'happy',     'heart_bandaid'],
-        toy_cause:    ['#F1F5F9', '#E2E8F0', '#F472B6', 'surprised', 'broken_bunny'],
-        toy_effect:   ['#E0E7FF', '#C7D2FE', '#60A5FA', 'cry',       'crying_tears'],
-        tidy_cause:   ['#ECFDF5', '#A7F3D0', '#FBBF24', 'happy',     'toy_box'],
-        tidy_effect:  ['#FEF9C3', '#FDE047', '#34D399', 'happy',     'star_sticker'],
-        dist_brush:   ['#E0F2FE', '#BAE6FD', '#38BDF8', 'happy',     'toothbrush'],
-        dist_soccer:  ['#BAE6FD', '#4ADE80', '#EF4444', 'happy',     'soccer_ball'],
-        dist_blocks:  ['#FEF3C7', '#FDE68A', '#3B82F6', 'happy',     'wood_blocks'],
-        dist_draw:    ['#FFFBEB', '#FDE68A', '#EC4899', 'happy',     'rainbow_draw'],
+    function buildImgPath(rawPath) {
+      const ver = window.IMAGE_VERSION || 1;
+      if (!rawPath) return '';
+      if (rawPath.startsWith('data:') || rawPath.includes('?')) return rawPath;
+      return `${rawPath}?v=${ver}`;
+    }
 
-        s1_1: ['#E0F2FE', '#BAE6FD', '#38BDF8', 'happy', 'faucet_water'],
-        s1_2: ['#E0F2FE', '#93C5FD', '#60A5FA', 'happy', 'soap_bubbles'],
-        s1_3: ['#DBEAFE', '#93C5FD', '#3B82F6', 'happy', 'rinse_hands'],
-        s1_4: ['#FEF3C7', '#FDE68A', '#F472B6', 'happy', 'wash_towel'],
-        s2_1: ['#FEF9C3', '#FDE047', '#FB923C', 'happy', 'fold_quilt'],
-        s2_2: ['#E0F2FE', '#BAE6FD', '#38BDF8', 'happy', 'toothbrush'],
-        s2_3: ['#ECFDF5', '#A7F3D0', '#10B981', 'happy', 'school_uniform'],
-        s2_4: ['#BAE6FD', '#86EFAC', '#3B82F6', 'happy', 'school_bag'],
-        s3_1: ['#FEF3C7', '#D97706', '#FB923C', 'happy', 'pot_soil'],
-        s3_2: ['#FEF3C7', '#B45309', '#FBBF24', 'happy', 'plant_seed'],
-        s3_3: ['#BAE6FD', '#86EFAC', '#38BDF8', 'happy', 'water_plant'],
-        s3_4: ['#ECFDF5', '#4ADE80', '#F472B6', 'happy', 'bloom_flower'],
-        s4_1: ['#FFFBEB', '#FDE68A', '#FBBF24', 'happy', 'two_bread'],
-        s4_2: ['#FFF1F2', '#FECDD3', '#FB7185', 'happy', 'spread_jam'],
-        s4_3: ['#FEF3C7', '#FDE047', '#F59E0B', 'happy', 'cut_sandwich'],
-        s4_4: ['#ECFDF5', '#A7F3D0', '#10B981', 'happy', 'eat_sandwich'],
-        s5_1: ['#E0F2FE', '#BAE6FD', '#38BDF8', 'happy', 'cup_brush'],
-        s5_2: ['#DBEAFE', '#93C5FD', '#60A5FA', 'happy', 'squeeze_paste'],
-        s5_3: ['#E0F2FE', '#7DD3FC', '#3B82F6', 'happy', 'toothbrush'],
-        s5_4: ['#ECFDF5', '#A7F3D0', '#14B8A6', 'happy', 'rinse_cup'],
-        s6_1: ['#BAE6FD', '#86EFAC', '#FBBF24', 'happy', 'park_lineup'],
-        s6_2: ['#BAE6FD', '#4ADE80', '#FB923C', 'happy', 'climb_steps'],
-        s6_3: ['#E0F2FE', '#86EFAC', '#A855F7', 'happy', 'sit_slide_top'],
-        s6_4: ['#FEF9C3', '#4ADE80', '#EF4444', 'happy', 'slide_down'],
-        s7_1: ['#E0F2FE', '#BAE6FD', '#38BDF8', 'happy', 'faucet_water'],
-        s7_2: ['#FFFBEB', '#FDBA74', '#34D399', 'happy', 'spoon_eat'],
-        s7_3: ['#FEF3C7', '#FDE047', '#F59E0B', 'happy', 'empty_bowl'],
-        s7_4: ['#ECFDF5', '#A7F3D0', '#10B981', 'happy', 'wipe_mouth'],
-        s8_1: ['#FFFBEB', '#FDE68A', '#60A5FA', 'happy', 'paper_crayons'],
-        s8_2: ['#FEF3C7', '#FDE047', '#818CF8', 'happy', 'sketch_pencil'],
-        s8_3: ['#FFF1F2', '#FECDD3', '#EC4899', 'happy', 'rainbow_draw'],
-        s8_4: ['#FEF9C3', '#FDE047', '#10B981', 'happy', 'star_sticker']
-      };
+    // 當 .jpg 讀唔到時，自動試 .png -> .JPG -> .webp，最後先顯示後備插圖並提示檔名
+    function handleImgFallback(imgEl) {
+      const raw = imgEl.getAttribute('data-raw-src') || '';
+      const base = raw.replace(/\.(jpg|jpeg|png|webp)$/i, '');
+      const ver = window.IMAGE_VERSION || 1;
+      const step = parseInt(imgEl.getAttribute('data-retry-step') || '0', 10);
 
-      const cfg = map[sceneKey] || ['#FEF3C7', '#A7F3D0', '#60A5FA', 'happy', 'star_sticker'];
-      const [bgSky, bgFloor, shirtCol, expr, prop] = cfg;
-
-      let eyesMouth = '';
-      if (expr === 'happy') {
-        eyesMouth = `
-          <circle cx="-11" cy="-5" r="4.2" fill="#1E293B"/><circle cx="11" cy="-5" r="4.2" fill="#1E293B"/>
-          <circle cx="-12.5" cy="-6.5" r="1.5" fill="#FFF"/><circle cx="9.5" cy="-6.5" r="1.5" fill="#FFF"/>
-          <circle cx="-19" cy="2" r="5.5" fill="#FB7185" opacity="0.45"/><circle cx="19" cy="2" r="5.5" fill="#FB7185" opacity="0.45"/>
-          <path d="M-9,5 Q0,16 9,5 Z" fill="#EF4444" stroke="#78350F" stroke-width="2"/>
-        `;
-      } else if (expr === 'sleepy') {
-        eyesMouth = `
-          <path d="M-16,-5 Q-10,1 -4,-5 M4,-5 Q10,1 16,-5" fill="none" stroke="#1E293B" stroke-width="3" stroke-linecap="round"/>
-          <ellipse cx="0" cy="7" rx="6" ry="7.5" fill="#EF4444"/>
-        `;
-      } else if (expr === 'cry') {
-        eyesMouth = `
-          <circle cx="-11" cy="-5" r="4" fill="#1E293B"/><circle cx="11" cy="-5" r="4" fill="#1E293B"/>
-          <path d="M-14,0 L-14,15 M14,0 L14,15" stroke="#38BDF8" stroke-width="4.5" stroke-linecap="round"/>
-          <path d="M-9,11 Q0,3 9,11" fill="none" stroke="#78350F" stroke-width="3" stroke-linecap="round"/>
-        `;
-      } else if (expr === 'sweat') {
-        eyesMouth = `
-          <circle cx="-11" cy="-5" r="4" fill="#1E293B"/><circle cx="11" cy="-5" r="4" fill="#1E293B"/>
-          <circle cx="-19" cy="2" r="6.5" fill="#FB7185" opacity="0.7"/><circle cx="19" cy="2" r="6.5" fill="#FB7185" opacity="0.7"/>
-          <path d="M23,-16 C27,-6 19,-6 23,-16 Z" fill="#38BDF8"/>
-          <path d="M-8,8 Q0,15 8,8 Z" fill="#EF4444"/>
-        `;
+      const fallbacks = [`${base}.png?v=${ver}`, `${base}.JPG?v=${ver}`, `${base}.webp?v=${ver}`];
+      if (step < fallbacks.length) {
+        imgEl.setAttribute('data-retry-step', String(step + 1));
+        imgEl.src = fallbacks[step];
       } else {
-        eyesMouth = `
-          <circle cx="-11" cy="-5" r="4.2" fill="#1E293B"/><circle cx="11" cy="-5" r="4.2" fill="#1E293B"/>
-          <path d="M-8,10 Q0,3 8,10" fill="none" stroke="#78350F" stroke-width="3" stroke-linecap="round"/>
-        `;
+        imgEl.style.display = 'none';
+        if (imgEl.nextElementSibling) imgEl.nextElementSibling.style.display = 'flex';
       }
-
-      const propSVG = renderScenePropSVG(prop);
-
-      return `
-        <svg viewBox="0 0 260 185" class="w-full h-full">
-          <rect width="260" height="135" fill="${bgSky}"/>
-          <rect y="130" width="260" height="55" fill="${bgFloor}"/>
-          <circle cx="32" cy="28" r="14" fill="#FFFFFF" opacity="0.28"/>
-          <circle cx="228" cy="36" r="18" fill="#FFFFFF" opacity="0.22"/>
-          <g transform="translate(130, 96)">
-            <path d="M-34,64 C-34,20 34,20 34,64 Z" fill="${shirtCol}" stroke="#1E293B" stroke-width="3"/>
-            <circle cx="0" cy="-6" r="32" fill="#FFE4E6" stroke="#78350F" stroke-width="3"/>
-            <path d="M-32,-10 C-32,-42 32,-42 32,-10 C20,-22 9,-24 0,-20 C-9,-24 -20,-22 -32,-10 Z" fill="#451A03"/>
-            ${eyesMouth}
-          </g>
-          ${propSVG}
-        </svg>
-      `;
-    }
-
-    function renderScenePropSVG(prop) {
-      switch (prop) {
-        case 'rain_window':
-          return `
-            <g fill="#64748B"><circle cx="65" cy="26" r="20"/><circle cx="95" cy="22" r="24"/><circle cx="175" cy="25" r="22"/></g>
-            <polygon points="130,30 118,54 129,54 120,76 142,50 130,50" fill="#FACC15"/>
-            <g stroke="#7DD3FC" stroke-width="3.5" stroke-linecap="round">
-              <line x1="48" y1="52" x2="40" y2="72"/><line x1="85" y1="58" x2="77" y2="78"/>
-              <line x1="185" y1="52" x2="177" y2="72"/><line x1="215" y1="58" x2="207" y2="78"/>
-            </g>`;
-        case 'umbrella':
-          return `
-            <g transform="translate(130, 44)">
-              <path d="M0,0 L0,84 C0,92 -10,92 -10,84" fill="none" stroke="#78350F" stroke-width="4.5" stroke-linecap="round"/>
-              <path d="M-68,4 C-64,-42 64,-42 68,4 Q34,-6 0,4 Q-34,-6 -68,4 Z" fill="#FB7185" stroke="#881337" stroke-width="3"/>
-              <path d="M-24,4 C-18,-40 18,-40 24,4 Q0,-6 -24,4 Z" fill="#FACC15" stroke="#881337" stroke-width="2.5"/>
-            </g>`;
-        case 'hungry_tummy':
-          return `
-            <ellipse cx="54" cy="40" rx="36" ry="24" fill="#FFF" stroke="#F59E0B" stroke-width="3"/>
-            <path d="M34,42 L74,42 C70,56 38,56 34,42 Z" fill="#EF4444"/>
-            <circle cx="130" cy="144" r="15" fill="#DBEAFE" stroke="#1E3A8A" stroke-width="2.5"/>`;
-        case 'hot_noodles':
-          return `
-            <ellipse cx="130" cy="138" rx="40" ry="12" fill="#FEF08A" stroke="#CA8A04" stroke-width="2.5"/>
-            <path d="M90,138 L170,138 C162,172 98,172 90,138 Z" fill="#EF4444" stroke="#7F1D1D" stroke-width="3"/>`;
-        case 'muddy_hands':
-          return `
-            <circle cx="84" cy="118" r="14" fill="#FFE4E6" stroke="#78350F" stroke-width="2.5"/>
-            <circle cx="84" cy="118" r="9" fill="#78350F"/>
-            <circle cx="176" cy="118" r="14" fill="#FFE4E6" stroke="#78350F" stroke-width="2.5"/>
-            <circle cx="176" cy="118" r="9" fill="#78350F"/>`;
-        case 'wash_towel':
-          return `
-            <rect x="152" y="88" width="44" height="54" rx="10" fill="#F472B6" stroke="#9D174D" stroke-width="3"/>
-            <line x1="160" y1="130" x2="188" y2="130" stroke="#FBCFE8" stroke-width="4"/>
-            <circle cx="72" cy="115" r="11" fill="#FFF" stroke="#38BDF8" stroke-width="2.5"/>`;
-        case 'hot_sun':
-          return `
-            <circle cx="48" cy="42" r="25" fill="#F97316"/>
-            <circle cx="48" cy="42" r="18" fill="#FACC15"/>`;
-        case 'ice_cream':
-          return `
-            <g transform="translate(176, 108)">
-              <polygon points="-13,8 13,8 0,42" fill="#FBBF24" stroke="#B45309" stroke-width="2.5"/>
-              <circle cx="0" cy="2" r="14" fill="#F472B6" stroke="#9D174D" stroke-width="2.5"/>
-              <circle cx="0" cy="-12" r="12" fill="#A7F3D0" stroke="#065F46" stroke-width="2.5"/>
-            </g>`;
-        case 'moon_stars':
-          return `
-            <path d="M48,26 A18,18 0 1,0 68,52 A14,14 0 1,1 48,26 Z" fill="#FACC15"/>
-            <circle cx="205" cy="34" r="4" fill="#FEF08A"/><circle cx="225" cy="55" r="3" fill="#FEF08A"/>`;
-        case 'cozy_bed':
-          return `
-            <rect x="42" y="118" width="176" height="52" rx="14" fill="#60A5FA" stroke="#1E3A8A" stroke-width="3"/>
-            <text x="185" y="56" fill="#FACC15" font-size="22" font-weight="900">Zzz</text>`;
-        case 'scraped_knee':
-          return `
-            <circle cx="155" cy="148" r="16" fill="#FFE4E6" stroke="#78350F" stroke-width="2.5"/>
-            <circle cx="155" cy="148" r="8" fill="#EF4444"/>`;
-        case 'heart_bandaid':
-          return `
-            <circle cx="130" cy="148" r="22" fill="#FFE4E6" stroke="#78350F" stroke-width="2.5"/>
-            <rect x="112" y="140" width="36" height="15" rx="7" fill="#F472B6" stroke="#9D174D" stroke-width="2.5"/>`;
-        case 'broken_bunny':
-          return `
-            <g transform="translate(72, 138)">
-              <circle cx="0" cy="0" r="18" fill="#F472B6" stroke="#9D174D" stroke-width="2.5"/>
-              <ellipse cx="-10" cy="-22" rx="6" ry="14" fill="#F472B6" stroke="#9D174D" stroke-width="2.5"/>
-              <ellipse cx="22" cy="8" rx="6" ry="14" transform="rotate(65 22 8)" fill="#F472B6" stroke="#9D174D" stroke-width="2.5"/>
-            </g>`;
-        case 'crying_tears':
-          return `
-            <circle cx="80" cy="142" r="10" fill="#38BDF8" opacity="0.6"/>
-            <circle cx="180" cy="142" r="10" fill="#38BDF8" opacity="0.6"/>`;
-        case 'toy_box':
-          return `
-            <rect x="65" y="122" width="130" height="50" rx="8" fill="#FBBF24" stroke="#92400E" stroke-width="3"/>
-            <rect x="85" y="102" width="22" height="20" fill="#EF4444" stroke="#7F1D1D" stroke-width="2.5"/>
-            <circle cx="135" cy="110" r="12" fill="#3B82F6" stroke="#1E3A8A" stroke-width="2.5"/>`;
-        case 'star_sticker':
-          return `
-            <polygon points="130,115 136,127 149,129 139,138 142,151 130,144 118,151 121,138 111,129 124,127" fill="#FACC15" stroke="#CA8A04" stroke-width="2.5"/>`;
-        case 'faucet_water':
-          return `
-            <path d="M195,82 L195,122 M168,82 L195,82" fill="none" stroke="#64748B" stroke-width="8" stroke-linecap="round"/>
-            <path d="M170,90 L164,142 M176,90 L182,142" stroke="#38BDF8" stroke-width="5" stroke-linecap="round"/>`;
-        case 'soap_bubbles':
-          return `
-            <rect x="72" y="126" width="38" height="24" rx="10" fill="#F472B6" stroke="#9D174D" stroke-width="2.5"/>
-            <circle cx="122" cy="132" r="14" fill="#FFF" stroke="#38BDF8" stroke-width="2.5"/>
-            <circle cx="145" cy="126" r="18" fill="#FFF" stroke="#38BDF8" stroke-width="2.5"/>
-            <circle cx="168" cy="135" r="12" fill="#FFF" stroke="#38BDF8" stroke-width="2.5"/>`;
-        case 'rinse_hands':
-          return `
-            <path d="M85,135 Q130,115 175,135" fill="none" stroke="#38BDF8" stroke-width="10" stroke-linecap="round"/>
-            <circle cx="105" cy="136" r="12" fill="#FFE4E6" stroke="#78350F" stroke-width="2.5"/>
-            <circle cx="155" cy="136" r="12" fill="#FFE4E6" stroke="#78350F" stroke-width="2.5"/>`;
-        case 'fold_quilt':
-          return `
-            <rect x="68" y="122" width="124" height="44" rx="10" fill="#38BDF8" stroke="#0284C7" stroke-width="3"/>
-            <line x1="68" y1="144" x2="192" y2="144" stroke="#BAE6FD" stroke-width="4"/>`;
-        case 'school_uniform':
-          return `
-            <path d="M96,120 L164,120 L172,165 L88,165 Z" fill="#FFFFFF" stroke="#475569" stroke-width="3"/>
-            <polygon points="130,122 122,150 130,158 138,150" fill="#EF4444"/>`;
-        case 'school_bag':
-          return `
-            <rect x="166" y="102" width="44" height="52" rx="12" fill="#FACC15" stroke="#B45309" stroke-width="3"/>
-            <rect x="174" y="124" width="28" height="20" rx="6" fill="#F97316"/>`;
-        case 'pot_soil':
-          return `
-            <polygon points="92,122 168,122 156,172 104,172" fill="#D97706" stroke="#78350F" stroke-width="3"/>
-            <ellipse cx="130" cy="122" rx="38" ry="10" fill="#451A03"/>`;
-        case 'plant_seed':
-          return `
-            <polygon points="92,126 168,126 156,172 104,172" fill="#D97706" stroke="#78350F" stroke-width="3"/>
-            <circle cx="130" cy="112" r="9" fill="#FACC15" stroke="#854D0E" stroke-width="2.5"/>`;
-        case 'water_plant':
-          return `
-            <polygon points="96,132 164,132 154,174 106,174" fill="#D97706" stroke="#78350F" stroke-width="3"/>
-            <path d="M130,132 L130,108" stroke="#16A34A" stroke-width="5" stroke-linecap="round"/>
-            <circle cx="188" cy="82" r="18" fill="#38BDF8" stroke="#0284C7" stroke-width="2.5"/>
-            <path d="M168,94 L142,116" stroke="#38BDF8" stroke-width="4" stroke-dasharray="4 4"/>`;
-        case 'bloom_flower':
-          return `
-            <polygon points="96,134 164,134 154,174 106,174" fill="#D97706" stroke="#78350F" stroke-width="3"/>
-            <path d="M130,134 L130,96" stroke="#16A34A" stroke-width="6" stroke-linecap="round"/>
-            <circle cx="130" cy="82" r="18" fill="#FB7185" stroke="#9D174D" stroke-width="2.5"/>
-            <circle cx="130" cy="82" r="8" fill="#FACC15"/>`;
-        case 'two_bread':
-          return `
-            <rect x="66" y="122" width="54" height="46" rx="10" fill="#FEF3C7" stroke="#D97706" stroke-width="4"/>
-            <rect x="140" y="122" width="54" height="46" rx="10" fill="#FEF3C7" stroke="#D97706" stroke-width="4"/>`;
-        case 'spread_jam':
-          return `
-            <rect x="95" y="120" width="70" height="50" rx="10" fill="#FEF3C7" stroke="#D97706" stroke-width="4"/>
-            <ellipse cx="130" cy="145" rx="24" ry="15" fill="#EF4444"/>`;
-        case 'cut_sandwich':
-          return `
-            <polygon points="75,165 125,118 125,165" fill="#FEF3C7" stroke="#D97706" stroke-width="3.5"/>
-            <polygon points="135,165 185,118 185,165" fill="#FEF3C7" stroke="#D97706" stroke-width="3.5"/>`;
-        case 'eat_sandwich':
-          return `
-            <polygon points="100,152 130,112 160,152" fill="#FEF3C7" stroke="#D97706" stroke-width="3.5"/>
-            <line x1="108" y1="146" x2="152" y2="146" stroke="#EF4444" stroke-width="5"/>`;
-        case 'cup_brush':
-          return `
-            <rect x="74" y="118" width="38" height="48" rx="6" fill="#38BDF8" stroke="#0284C7" stroke-width="3"/>
-            <line x1="168" y1="105" x2="168" y2="165" stroke="#EF4444" stroke-width="7" stroke-linecap="round"/>`;
-        case 'squeeze_paste':
-          return `
-            <line x1="90" y1="142" x2="170" y2="142" stroke="#EF4444" stroke-width="8" stroke-linecap="round"/>
-            <rect x="148" y="126" width="20" height="12" rx="4" fill="#FFF" stroke="#94A3B8" stroke-width="2"/>
-            <circle cx="158" cy="122" r="8" fill="#38BDF8"/>`;
-        case 'toothbrush':
-          return `
-            <rect x="128" y="96" width="56" height="8" rx="4" fill="#EF4444" stroke="#7F1D1D" stroke-width="2"/>
-            <circle cx="126" cy="98" r="10" fill="#FFF" stroke="#CBD5E1" stroke-width="2"/>`;
-        case 'rinse_cup':
-          return `
-            <rect x="152" y="106" width="36" height="44" rx="6" fill="#38BDF8" stroke="#0284C7" stroke-width="3"/>
-            <circle cx="115" cy="112" r="8" fill="#BAE6FD"/>`;
-        case 'park_lineup':
-          return `
-            <circle cx="62" cy="115" r="20" fill="#FDE68A" stroke="#78350F" stroke-width="2.5"/>
-            <circle cx="198" cy="115" r="20" fill="#A7F3D0" stroke="#065F46" stroke-width="2.5"/>`;
-        case 'climb_steps':
-          return `
-            <line x1="68" y1="170" x2="98" y2="95" stroke="#64748B" stroke-width="6"/>
-            <line x1="162" y1="170" x2="132" y2="95" stroke="#64748B" stroke-width="6"/>
-            <line x1="75" y1="150" x2="155" y2="150" stroke="#F59E0B" stroke-width="6"/>
-            <line x1="85" y1="125" x2="145" y2="125" stroke="#F59E0B" stroke-width="6"/>`;
-        case 'sit_slide_top':
-          return `<path d="M80,125 L180,175" stroke="#FACC15" stroke-width="22" stroke-linecap="round"/>`;
-        case 'slide_down':
-          return `<path d="M55,95 L205,172" stroke="#FACC15" stroke-width="24" stroke-linecap="round"/>`;
-        case 'spoon_eat':
-          return `
-            <path d="M92,142 L168,142 C160,172 100,172 92,142 Z" fill="#3B82F6" stroke="#1E3A8A" stroke-width="3"/>
-            <line x1="155" y1="138" x2="182" y2="112" stroke="#94A3B8" stroke-width="6" stroke-linecap="round"/>`;
-        case 'empty_bowl':
-          return `
-            <circle cx="130" cy="144" r="28" fill="#FFFFFF" stroke="#3B82F6" stroke-width="4"/>
-            <polygon points="182,115 186,125 196,125 188,131 191,141 182,135 173,141 176,131 168,125 178,125" fill="#FACC15"/>`;
-        case 'wipe_mouth':
-          return `<rect x="136" y="92" width="34" height="28" rx="6" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2.5"/>`;
-        case 'paper_crayons':
-          return `
-            <rect x="78" y="122" width="104" height="50" rx="6" fill="#FFFFFF" stroke="#94A3B8" stroke-width="3"/>
-            <rect x="192" y="128" width="12" height="38" fill="#EF4444"/><rect x="208" y="128" width="12" height="38" fill="#3B82F6"/>`;
-        case 'sketch_pencil':
-          return `
-            <rect x="78" y="122" width="104" height="50" rx="6" fill="#FFFFFF" stroke="#94A3B8" stroke-width="3"/>
-            <circle cx="130" cy="146" r="14" fill="none" stroke="#475569" stroke-width="2.5" stroke-dasharray="4 3"/>`;
-        case 'rainbow_draw':
-          return `
-            <path d="M72,162 A58,58 0 0,1 188,162" fill="none" stroke="#EF4444" stroke-width="9" stroke-linecap="round"/>
-            <path d="M84,162 A46,46 0 0,1 176,162" fill="none" stroke="#FACC15" stroke-width="9" stroke-linecap="round"/>
-            <path d="M96,162 A34,34 0 0,1 164,162" fill="none" stroke="#38BDF8" stroke-width="9" stroke-linecap="round"/>`;
-        case 'soccer_ball':
-          return `<circle cx="130" cy="144" r="24" fill="#FFF" stroke="#1E293B" stroke-width="3.5"/><circle cx="130" cy="144" r="8" fill="#1E293B"/>`;
-        case 'wood_blocks':
-          return `<rect x="85" y="132" width="40" height="36" rx="5" fill="#EF4444" stroke="#7F1D1D" stroke-width="2.5"/><rect x="135" y="132" width="40" height="36" rx="5" fill="#3B82F6" stroke="#1E3A8A" stroke-width="2.5"/>`;
-        default:
-          return '';
-      }
-    }
-
-    /********************************************************************
-     * 2. COMPLETE QUESTION BANKS FOR BOTH SENTENCE PATTERNS
-     ********************************************************************/
-    const DEFAULT_CAUSAL_QUESTIONS = [
-      {
-        id: 'c1',
-        cause: { cantonese: '出面落大雨', written: '外面下大雨', sceneKey: 'rain_cause', aiPrompt: 'A cute young child looking out a window at heavy pouring rain outside' },
-        effect: { cantonese: '出街要擔遮', written: '出門要撐傘', sceneKey: 'rain_effect', aiPrompt: 'A cute young child wearing a yellow raincoat holding a colorful umbrella in the rain' },
-        distractors: [
-          { cantonese: '對住鏡刷牙', written: '對著鏡刷牙', sceneKey: 'dist_brush' },
-          { cantonese: '喺草地踢波', written: '在草地踢球', sceneKey: 'dist_soccer' }
-        ]
-      },
-      {
-        id: 'c2',
-        cause: { cantonese: '肚仔好餓咕咕叫', written: '肚子很餓咕咕叫', sceneKey: 'hungry_cause', aiPrompt: 'A cute young child holding their hungry rumbling tummy with both hands' },
-        effect: { cantonese: '要食熱辣辣嘅麵', written: '要吃熱騰騰的麵', sceneKey: 'hungry_effect', aiPrompt: 'A cute young child happily eating a steaming bowl of noodles' },
-        distractors: [
-          { cantonese: '地毯砌積木', written: '地毯砌積木', sceneKey: 'dist_blocks' },
-          { cantonese: '蠟筆畫彩虹', written: '蠟筆畫彩虹', sceneKey: 'dist_draw' }
-        ]
-      },
-      {
-        id: 'c3',
-        cause: { cantonese: '隻手同塊面污糟咗', written: '手和面弄髒了', sceneKey: 'dirty_cause', aiPrompt: 'A cute young child showing muddy smudged hands and cheeks' },
-        effect: { cantonese: '要洗手同抹面', written: '要洗手和抹面', sceneKey: 'dirty_effect', aiPrompt: 'A cute young child washing hands and wiping face with a clean towel' },
-        distractors: [
-          { cantonese: '喺草地踢波', written: '在草地踢球', sceneKey: 'dist_soccer' },
-          { cantonese: '蠟筆畫彩虹', written: '蠟筆畫彩虹', sceneKey: 'dist_draw' }
-        ]
-      },
-      {
-        id: 'c4',
-        cause: { cantonese: '天氣好熱流晒汗', written: '天氣很熱流汗', sceneKey: 'hot_cause', aiPrompt: 'A cute young child wiping sweat drops under a hot bright sun' },
-        effect: { cantonese: '食凍冰冰嘅雪糕', written: '吃冰涼的雪糕', sceneKey: 'hot_effect', aiPrompt: 'A cute young child happily eating a double scoop ice cream cone' },
-        distractors: [
-          { cantonese: '地毯砌積木', written: '地毯砌積木', sceneKey: 'dist_blocks' },
-          { cantonese: '對住鏡刷牙', written: '對著鏡刷牙', sceneKey: 'dist_brush' }
-        ]
-      },
-      {
-        id: 'c5',
-        cause: { cantonese: '夜晚好眼瞓', written: '晚上很想睡', sceneKey: 'sleepy_cause', aiPrompt: 'A cute young child in pajamas yawning at night with moon outside' },
-        effect: { cantonese: '上床去瞓覺', written: '上床去睡覺', sceneKey: 'sleepy_effect', aiPrompt: 'A cute young child sleeping peacefully in a cozy bed' },
-        distractors: [
-          { cantonese: '喺草地踢波', written: '在草地踢球', sceneKey: 'dist_soccer' },
-          { cantonese: '蠟筆畫彩虹', written: '蠟筆畫彩虹', sceneKey: 'dist_draw' }
-        ]
-      },
-      {
-        id: 'c6',
-        cause: { cantonese: '喺公園跌親擦損咗', written: '在公園跌倒擦傷了', sceneKey: 'fall_cause', aiPrompt: 'A cute young child sitting on park grass with a small scrape on knee' },
-        effect: { cantonese: '要貼靚靚膠布', written: '要貼漂亮膠布', sceneKey: 'fall_effect', aiPrompt: 'A cute young child smiling with a heart bandage plaster on knee' },
-        distractors: [
-          { cantonese: '對住鏡刷牙', written: '對著鏡刷牙', sceneKey: 'dist_brush' },
-          { cantonese: '地毯砌積木', written: '地毯砌積木', sceneKey: 'dist_blocks' }
-        ]
-      },
-      {
-        id: 'c7',
-        cause: { cantonese: '心愛嘅玩具爛咗', written: '心愛的玩具破了', sceneKey: 'toy_cause', aiPrompt: 'A cute young child looking sad at a broken plush bunny toy' },
-        effect: { cantonese: '好傷心喺度喊', written: '很傷心地哭泣', sceneKey: 'toy_effect', aiPrompt: 'A cute young child sitting and crying with big cartoon tears' },
-        distractors: [
-          { cantonese: '喺草地踢波', written: '在草地踢球', sceneKey: 'dist_soccer' },
-          { cantonese: '蠟筆畫彩虹', written: '蠟筆畫彩虹', sceneKey: 'dist_draw' }
-        ]
-      },
-      {
-        id: 'c8',
-        cause: { cantonese: '乖乖幫手執好玩具', written: '乖乖幫忙收拾玩具', sceneKey: 'tidy_cause', aiPrompt: 'A cute young child putting toy blocks neatly into a wooden toy box' },
-        effect: { cantonese: '老師讚賞派貼紙', written: '老師讚賞派貼紙', sceneKey: 'tidy_effect', aiPrompt: 'A cute young child smiling proudly with a gold star sticker on shirt' },
-        distractors: [
-          { cantonese: '對住鏡刷牙', written: '對著鏡刷牙', sceneKey: 'dist_brush' },
-          { cantonese: '地毯砌積木', written: '地毯砌積木', sceneKey: 'dist_blocks' }
-        ]
-      }
-    ];
-
-    const DEFAULT_SEQ_QUESTIONS = [
-      {
-        id: 'seq1',
-        title: '洗手抹面四部曲',
-        steps: [
-          { cantonese: '開水喉整濕手', written: '開水龍頭弄濕手', sceneKey: 's1_1', aiPrompt: 'Single unified scene, no panels: The exact same cute 5-year-old Asian child with short neat hair wearing yellow shirt in a clean bathroom turning on tap water' },
-          { cantonese: '搽番梘起泡泡', written: '塗肥皂起泡泡', sceneKey: 's1_2', aiPrompt: 'Single unified scene, no panels: The exact same cute 5-year-old Asian child rubbing hands with soap bubbles in the same bathroom' },
-          { cantonese: '沖乾淨啲泡泡', written: '沖乾淨泡沫', sceneKey: 's1_3', aiPrompt: 'Single unified scene, no panels: The exact same cute 5-year-old Asian child rinsing all bubbles under running tap water in the same bathroom' },
-          { cantonese: '用毛巾抹手同抹面', written: '用毛巾抹手和抹面', sceneKey: 's1_4', aiPrompt: 'Single unified scene, no panels: The exact same cute 5-year-old Asian child smiling happily while drying face and hands with a soft towel in the same bathroom' }
-        ]
-      },
-      {
-        id: 'seq2',
-        title: '朝早起身準備返學',
-        steps: [
-          { cantonese: '朝早醒咗起身', written: '早上睡醒起床', sceneKey: 's2_1', aiPrompt: 'Single unified scene, no panels: Cute 5-year-old Hong Kong child waking up in bed stretching happily' },
-          { cantonese: '刷牙同埋抹面', written: '刷牙和抹面', sceneKey: 's2_2', aiPrompt: 'Single unified scene, no panels: Same cute 5-year-old Hong Kong child brushing teeth and washing face' },
-          { cantonese: '換好整齊校服', written: '換好整齊校服', sceneKey: 's2_3', aiPrompt: 'Single unified scene, no panels: Same cute 5-year-old Hong Kong child dressed neatly in kindergarten uniform' },
-          { cantonese: '孭住書包返學', written: '背著書包上學', sceneKey: 's2_4', aiPrompt: 'Single unified scene, no panels: Same cute 5-year-old Hong Kong child wearing yellow school backpack ready to go' }
-        ]
-      },
-      {
-        id: 'seq3',
-        title: '種植小盆栽',
-        steps: [
-          { cantonese: '喺泥土挖個窿', written: '在泥土挖一個洞', sceneKey: 's3_1', aiPrompt: 'Single unified scene, no panels: The exact same cute 5-year-old Asian boy with short neat black hair wearing a yellow t-shirt and blue denim shorts, kneeling on a wooden garden balcony, using a small silver trowel to dig a hole in brown soil inside a round terracotta flower pot' },
-          { cantonese: '放粒種子落去', written: '把種子放進去', sceneKey: 's3_2', aiPrompt: 'Single unified scene, no panels: The exact same 5-year-old Asian boy with short neat black hair wearing the yellow t-shirt and blue shorts, holding a small golden seed carefully and placing it into the hole in the terracotta flower pot' },
-          { cantonese: '淋水同曬太陽', written: '澆水和曬太陽', sceneKey: 's3_3', aiPrompt: 'Single unified scene, no panels: The exact same 5-year-old Asian boy with short neat black hair wearing the yellow t-shirt and blue shorts, smiling happily as he pours water from a blue elephant watering can onto the green sprout in the terracotta pot under warm sun' },
-          { cantonese: '開出靚靚花朵', written: '開出漂亮花朵', sceneKey: 's3_4', aiPrompt: 'Single unified scene, no panels: The exact same 5-year-old Asian boy with short neat black hair wearing the yellow t-shirt and blue shorts, clapping hands excitedly beside the terracotta pot which now has a large beautiful blooming pink and yellow flower' }
-        ]
-      },
-      {
-        id: 'seq4',
-        title: '自己整果醬三文治',
-        steps: [
-          { cantonese: '攞兩塊白麵包', written: '拿兩片白麵包', sceneKey: 's4_1', aiPrompt: 'Single unified scene, no panels: Cute 5-year-old child placing two slices of white bread on a plate' },
-          { cantonese: '用刀仔搽果醬', written: '用小刀塗果醬', sceneKey: 's4_2', aiPrompt: 'Single unified scene, no panels: Same child using a spreader to spread red jam on bread' },
-          { cantonese: '將兩塊包夾埋', written: '把兩片麵包合起來', sceneKey: 's4_3', aiPrompt: 'Single unified scene, no panels: Same child putting two slices of bread together' },
-          { cantonese: '大啖食三文治', written: '大口吃三文治', sceneKey: 's4_4', aiPrompt: 'Single unified scene, no panels: Same child taking a big happy bite of the jam sandwich' }
-        ]
-      },
-      {
-        id: 'seq5',
-        title: '正確刷牙四部曲',
-        steps: [
-          { cantonese: '擠牙膏落牙刷', written: '擠牙膏在牙刷上', sceneKey: 's5_1', aiPrompt: 'Single unified scene, no panels: Cute child squeezing toothpaste onto a toothbrush' },
-          { cantonese: '上上下下刷牙', written: '上上下下刷牙', sceneKey: 's5_2', aiPrompt: 'Single unified scene, no panels: Same child brushing teeth with white bubbles' },
-          { cantonese: '飲啖水𠺘乾淨', written: '喝口水漱乾淨', sceneKey: 's5_3', aiPrompt: 'Single unified scene, no panels: Same child rinsing mouth with water from a cup' },
-          { cantonese: '牙齒白雪雪笑', written: '牙齒潔白地笑', sceneKey: 's5_4', aiPrompt: 'Single unified scene, no panels: Same child smiling wide showing sparkling clean teeth' }
-        ]
-      },
-      {
-        id: 'seq6',
-        title: '去公園玩瀡滑梯',
-        steps: [
-          { cantonese: '排隊行上樓梯', written: '排隊走上樓梯', sceneKey: 's6_1', aiPrompt: 'Single unified scene, no panels: Polite child climbing playground slide steps' },
-          { cantonese: '坐穩喺滑梯頂', written: '坐穩在滑梯頂部', sceneKey: 's6_2', aiPrompt: 'Single unified scene, no panels: Same child sitting safely on top of yellow slide' },
-          { cantonese: '雙手放好瀡落嚟', written: '雙手放好滑下來', sceneKey: 's6_3', aiPrompt: 'Single unified scene, no panels: Same child sliding down happily' },
-          { cantonese: '開心安全着地', written: '開心安全着地', sceneKey: 's6_4', aiPrompt: 'Single unified scene, no panels: Same child landing safely on soft playground mat' }
-        ]
-      },
-      {
-        id: 'seq7',
-        title: '食飯前後好習慣',
-        steps: [
-          { cantonese: '食飯前去洗手', written: '吃飯前去洗手', sceneKey: 's7_1', aiPrompt: 'Single unified scene, no panels: Cute child washing hands clean before eating' },
-          { cantonese: '坐定定食晒飯', written: '坐好把飯吃完', sceneKey: 's7_2', aiPrompt: 'Single unified scene, no panels: Same child sitting nicely eating whole bowl of food' },
-          { cantonese: '自己執好碗筷', written: '自己收拾碗筷', sceneKey: 's7_3', aiPrompt: 'Single unified scene, no panels: Same child stacking bowl and spoon to tidy up' },
-          { cantonese: '用毛巾抹乾淨嘴', written: '用毛巾抹乾淨嘴', sceneKey: 's7_4', aiPrompt: 'Single unified scene, no panels: Same child wiping mouth clean with soft towel' }
-        ]
-      },
-      {
-        id: 'seq8',
-        title: '畫一幅靚靚圖畫',
-        steps: [
-          { cantonese: '攤開一張白紙', written: '攤開一張白紙', sceneKey: 's8_1', aiPrompt: 'Single unified scene, no panels: Child laying out blank drawing paper and crayons' },
-          { cantonese: '用鉛筆畫線條', written: '用鉛筆畫線條', sceneKey: 's8_2', aiPrompt: 'Single unified scene, no panels: Same child sketching simple sun and rainbow outlines' },
-          { cantonese: '用蠟筆填顏色', written: '用蠟筆塗顏色', sceneKey: 's8_3', aiPrompt: 'Single unified scene, no panels: Same child coloring picture with bright crayons' },
-          { cantonese: '貼堂展示畫作', written: '貼堂展示畫作', sceneKey: 's8_4', aiPrompt: 'Single unified scene, no panels: Same child smiling proudly beside finished artwork' }
-        ]
-      }
-    ];
-
-    /********************************************************************
-     * 3. AI IMAGE ENGINE (Gemini Image Models with Prompt Enforcement)
-     ********************************************************************/
-    const apiKey = "";
-    const AI_ART_STYLES = {
-      '3d_pixar': {
-        id: '3d_pixar',
-        name: '🧸 3D 動畫風',
-        promptPrefix: 'Cute 3D Pixar style animated illustration for young children, adorable round-faced 5-year-old East Asian child, vibrant cheerful colors, clear action, NO text, NO words, NO letters: '
-      },
-      'watercolor_book': {
-        id: 'watercolor_book',
-        name: '🎨 溫馨繪本風',
-        promptPrefix: 'Warm children picture book illustration, soft watercolor and colored pencil texture, adorable round-faced young East Asian child, cozy storybook background, clear action, NO text, NO words: '
-      },
-      'kawaii_anime': {
-        id: 'kawaii_anime',
-        name: '🖍️ Q版卡通風',
-        promptPrefix: 'Kawaii Japanese chibi children illustration, clean bold outlines, expressive big eyes, cute young child in daily life scene, bright cheerful colors, NO text, NO words: '
-      },
-      'claymation': {
-        id: 'claymation',
-        name: '🌟 黏土動畫風',
-        promptPrefix: 'Adorable 3D claymation stop-motion style illustration, soft handmade plasticine clay texture, cute round child character, warm studio lighting, NO text, NO words: '
-      }
-    };
-
-    let currentArtStyle = localStorage.getItem('sen_ai_art_style') || '3d_pixar';
-    const memoryImageCache = new Map();
-    const activeGenerations = new Set();
-    let aiGenerationSessionId = 0;
-    let aiWorkshopTargetPattern = 'sequence_4step';
-
-    function openImageDB() {
-      return new Promise((resolve) => {
-        if (!window.indexedDB) return resolve(null);
-        const req = indexedDB.open('sen_dual_patterns_ai_db_v2', 1);
-        req.onupgradeneeded = (e) => {
-          const db = e.target.result;
-          if (!db.objectStoreNames.contains('ai_images')) db.createObjectStore('ai_images');
-        };
-        req.onsuccess = (e) => resolve(e.target.result);
-        req.onerror = () => resolve(null);
-      });
-    }
-
-    async function getCachedAIImage(cacheKey) {
-      if (memoryImageCache.has(cacheKey)) return memoryImageCache.get(cacheKey);
-      const db = await openImageDB();
-      if (!db) return null;
-      return new Promise((resolve) => {
-        try {
-          const req = db.transaction('ai_images', 'readonly').objectStore('ai_images').get(cacheKey);
-          req.onsuccess = () => {
-            if (req.result) memoryImageCache.set(cacheKey, req.result);
-            resolve(req.result || null);
-          };
-          req.onerror = () => resolve(null);
-        } catch (e) { resolve(null); }
-      });
-    }
-
-    async function setCachedAIImage(cacheKey, dataUrl) {
-      memoryImageCache.set(cacheKey, dataUrl);
-      const db = await openImageDB();
-      if (!db) return;
-      try {
-        db.transaction('ai_images', 'readwrite').objectStore('ai_images').put(dataUrl, cacheKey);
-      } catch (e) {}
-    }
-
-    async function fetchWithRetry(url, options, maxRetries = 2) {
-      let delay = 800;
-      for (let i = 0; i <= maxRetries; i++) {
-        try {
-          const res = await fetch(url, options);
-          if (res.ok) return await res.json();
-          if (i === maxRetries) throw new Error(`HTTP ${res.status}`);
-        } catch (err) {
-          if (i === maxRetries) throw err;
-        }
-        await new Promise(r => setTimeout(r, delay));
-        delay *= 2;
-      }
-    }
-
-    async function generateAIImageFromPrompt(visualPrompt, styleKey = currentArtStyle) {
-      const styleObj = AI_ART_STYLES[styleKey] || AI_ART_STYLES['3d_pixar'];
-      const fullPrompt = [
-        styleObj.promptPrefix,
-        visualPrompt,
-        ". CRITICAL MANDATORY RULES:",
-        "1. SINGLE UNIFIED SCENE ONLY. Strictly NO split-screen, NO multi-panel, NO 3-panel triptych, NO comic strip frames, NO collage.",
-        "2. ONLY THE SINGLE CHILD CHARACTER IN FRAME. Strictly NO adult hands reaching in, NO multiple extra people.",
-        "3. PURE ARTWORK ONLY. Strictly NO text, NO numbers, NO subtitles."
-      ].join(" ");
-
-      const generateContentModels = [
-        'gemini-3.1-flash-lite-image',
-        'gemini-3.1-flash-image',
-        'gemini-2.5-flash-image-preview',
-        'gemini-2.0-flash-preview-image-generation'
-      ];
-
-      for (const m of generateContentModels) {
-        try {
-          const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${apiKey}`;
-          const result = await fetchWithRetry(apiUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: [{ role: 'user', parts: [{ text: fullPrompt }] }],
-              generationConfig: { responseModalities: ['TEXT', 'IMAGE'] }
-            })
-          }, 1);
-          const part = result?.candidates?.[0]?.content?.parts?.find(p => p.inlineData && p.inlineData.data);
-          if (part) {
-            return `data:${part.inlineData.mimeType || 'image/png'};base64,${part.inlineData.data}`;
-          }
-        } catch (e) {}
-      }
-
-      try {
-        const imagenUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`;
-        const imagenRes = await fetchWithRetry(imagenUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            instances: [{ prompt: fullPrompt }],
-            parameters: { sampleCount: 1, aspectRatio: '4:3' }
-          })
-        }, 1);
-        const b64 = imagenRes?.predictions?.[0]?.bytesBase64Encoded;
-        if (b64) {
-          return `data:image/png;base64,${b64}`;
-        }
-      } catch (e) {}
-
-      return null;
-    }
-
-    function getCardCacheKey(card, styleKey = currentArtStyle) {
-      const uniqueId = card.aiPrompt || card.sceneKey || card.cantonese || card.id;
-      return `ai_v2_${styleKey}_${uniqueId}`;
-    }
-
-    async function ensureCurrentQuestionAIImages(forceRegenerate = false) {
-      const session = ++aiGenerationSessionId;
-      const qList = getActiveQuestionList();
-      const currentQ = qList[currentQuestionIndex];
-      if (!currentQ) return;
-
-      const targetCards = trayCards.filter(c => !c.isConjunction && c.role !== 'distractor');
-      if (targetCards.length === 0) return;
-
-      const cardsNeedingGeneration = [];
-      for (const card of targetCards) {
-        const cacheKey = getCardCacheKey(card, currentArtStyle);
-        if (!forceRegenerate) {
-          const cached = await getCachedAIImage(cacheKey);
-          if (cached) {
-            card.aiImage = cached;
-            card.isGeneratingAI = false;
-            syncCardAIImageToQuestionBank(currentQ, card, cached);
-            continue;
-          }
-        }
-        card.isGeneratingAI = true;
-        cardsNeedingGeneration.push(card);
-      }
-
-      updateTopAiStatusBadge(targetCards.length - cardsNeedingGeneration.length, targetCards.length, cardsNeedingGeneration.length > 0);
-      updateTeacherAIStatus();
-      if (currentScreen === 'training') renderWorkspace();
-
-      if (cardsNeedingGeneration.length === 0) return;
-
-      let completedCount = targetCards.length - cardsNeedingGeneration.length;
-      const totalCount = targetCards.length;
-
-      for (const card of cardsNeedingGeneration) {
-        const cacheKey = getCardCacheKey(card, currentArtStyle);
-        if (activeGenerations.has(cacheKey) && !forceRegenerate) continue;
-
-        activeGenerations.add(cacheKey);
-        card.isGeneratingAI = true;
-        updateTopAiStatusBadge(completedCount, totalCount, true);
-        updateTeacherAIStatus();
-        if (currentScreen === 'training') renderWorkspace();
-
-        const promptText = card.aiPrompt || `Cute round-faced 5-year-old Hong Kong child in daily life scene: "${card.written || card.cantonese}"`;
-        const generatedDataUrl = await generateAIImageFromPrompt(promptText, currentArtStyle);
-
-        activeGenerations.delete(cacheKey);
-        card.isGeneratingAI = false;
-
-        if (generatedDataUrl) {
-          card.aiImage = generatedDataUrl;
-          syncCardAIImageToQuestionBank(currentQ, card, generatedDataUrl);
-          await setCachedAIImage(cacheKey, generatedDataUrl);
-        }
-
-        completedCount++;
-        if (session === aiGenerationSessionId) {
-          updateTopAiStatusBadge(completedCount, totalCount, completedCount < totalCount);
-        }
-        updateTeacherAIStatus();
-        if (currentScreen === 'training') renderWorkspace();
-      }
-
-      if (session === aiGenerationSessionId) {
-        updateTopAiStatusBadge(totalCount, totalCount, false);
-      }
-    }
-
-    function syncCardAIImageToQuestionBank(questionObj, card, dataUrl) {
-      if (!questionObj || !dataUrl) return;
-      if (questionObj.steps && typeof card.stepNumber === 'number') {
-        const stepObj = questionObj.steps[card.stepNumber - 1];
-        if (stepObj) stepObj.aiImage = dataUrl;
-      } else if (questionObj.cause && card.role === 'cause') {
-        questionObj.cause.aiImage = dataUrl;
-      } else if (questionObj.effect && card.role === 'effect') {
-        questionObj.effect.aiImage = dataUrl;
-      }
-    }
-
-    function updateTopAiStatusBadge(doneCount, totalCount, isGenerating) {
-      const btn = document.getElementById('topAiStatusBtn');
-      const iconEl = document.getElementById('topAiStatusIcon');
-      const textEl = document.getElementById('topAiStatusText');
-      if (!btn || !iconEl || !textEl) return;
-
-      if (isGenerating) {
-        iconEl.textContent = '⏳';
-        iconEl.className = 'text-sm sm:text-base animate-spin';
-        textEl.textContent = `AI 繪圖中 (${doneCount}/${totalCount})...`;
-        btn.className = 'tactile-btn bg-fuchsia-500 text-white border-2 border-fuchsia-600 px-2.5 sm:px-4 h-10 sm:h-11 rounded-full font-black text-xs sm:text-sm flex items-center gap-1 sm:gap-1.5 shadow';
-      } else {
-        iconEl.textContent = '🎨';
-        iconEl.className = 'text-sm sm:text-base';
-        textEl.textContent = '重繪AI圖';
-        btn.className = 'tactile-btn bg-fuchsia-100 hover:bg-fuchsia-200 text-fuchsia-900 border-2 border-fuchsia-300 px-2.5 sm:px-4 h-10 sm:h-11 rounded-full font-black text-xs sm:text-sm flex items-center gap-1 sm:gap-1.5';
-      }
-    }
-
-    function updateTeacherAIStatus() {
-      const el = document.getElementById('aiTeacherStatus');
-      if (!el) return;
-      el.textContent = activeGenerations.size > 0
-        ? `✨ 正在使用 AI 為圖卡繪製插畫（尚餘 ${activeGenerations.size} 張）...`
-        : `✅ 當前題目 AI 圖卡已準備就緒（切換題目或畫風會自動生成）`;
-    }
-
-    async function regenerateCurrentQuestionImages() {
-      playSound('pop');
-      await ensureCurrentQuestionAIImages(true);
     }
 
     function renderCardVisual(card) {
-      // 自動讀取 images 資料夾入面對應代號嘅 jpg 圖片（例如 images/s1_1.jpg）
-      const imgPath = card.img || `images/${card.sceneKey}.jpg`;
+      const rawPath = card.img || (card.sceneKey ? `images/${card.sceneKey}.jpg` : '');
+      const fullSrc = buildImgPath(rawPath);
       return `
         <div class="w-full h-full relative bg-slate-50 overflow-hidden">
-          <img src="${imgPath}" alt="" class="w-full h-full object-cover animate-pop" draggable="false"
-               onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
-          <div style="display:none;" class="w-full h-full">${renderCuteSceneSVG(card.sceneKey)}</div>
+          <img src="${fullSrc}" data-raw-src="${rawPath}" data-retry-step="0" alt=""
+               class="w-full h-full object-cover animate-pop" draggable="false"
+               onerror="handleImgFallback(this)" />
+          <div style="display:none;" class="w-full h-full flex-col items-center justify-center relative">
+            ${renderCuteSceneSVG(card.sceneKey)}
+            <span class="absolute bottom-1 right-1 bg-slate-800/75 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
+              待放入: ${rawPath}
+            </span>
+          </div>
         </div>
       `;
     }
 
     /********************************************************************
-     * 4. APPLICATION STATE & DUAL-PATTERN CONTROLLER
+     * 2. 後備繪本圖案 (當某題暫時未放入相片時自動頂替，唔會穿崩)
      ********************************************************************/
+    function renderCuteSceneSVG(sceneKey) {
+      const map = {
+        rain_cause: ['#475569','#334155','#FB7185'], rain_effect: ['#BAE6FD','#86EFAC','#FACC15'],
+        hungry_cause: ['#FEF3C7','#FDE68A','#60A5FA'], hungry_effect: ['#FFFBEB','#FDBA74','#34D399'],
+        dirty_cause: ['#FEF9C3','#FDE047','#A78BFA'], dirty_effect: ['#E0F2FE','#BAE6FD','#38BDF8'],
+        hot_cause: ['#FFEDD5','#FED7AA','#FB923C'], hot_effect: ['#E0F2FE','#BAE6FD','#38BDF8'],
+        sleepy_cause: ['#1E1B4B','#312E81','#818CF8'], sleepy_effect: ['#312E81','#1E1B4B','#60A5FA'],
+        fall_cause: ['#BAE6FD','#86EFAC','#FB7185'], fall_effect: ['#FEF3C7','#FDE68A','#34D399'],
+        toy_cause: ['#F1F5F9','#E2E8F0','#F472B6'], toy_effect: ['#E0E7FF','#C7D2FE','#60A5FA'],
+        tidy_cause: ['#ECFDF5','#A7F3D0','#FBBF24'], tidy_effect: ['#FEF9C3','#FDE047','#34D399'],
+        s1_1: ['#E0F2FE','#BAE6FD','#38BDF8'], s1_2: ['#E0F2FE','#93C5FD','#60A5FA'],
+        s1_3: ['#DBEAFE','#93C5FD','#3B82F6'], s1_4: ['#FEF3C7','#FDE68A','#F472B6']
+      };
+      const [bgSky, bgFloor, shirtCol] = map[sceneKey] || ['#FEF3C7', '#A7F3D0', '#60A5FA'];
+      return `
+        <svg viewBox="0 0 260 185" class="w-full h-full">
+          <rect width="260" height="135" fill="${bgSky}"/>
+          <rect y="130" width="260" height="55" fill="${bgFloor}"/>
+          <g transform="translate(130, 96)">
+            <path d="M-34,64 C-34,20 34,20 34,64 Z" fill="${shirtCol}" stroke="#1E293B" stroke-width="3"/>
+            <circle cx="0" cy="-6" r="32" fill="#FFE4E6" stroke="#78350F" stroke-width="3"/>
+            <path d="M-32,-10 C-32,-42 32,-42 32,-10 C20,-22 9,-24 0,-20 C-9,-24 -20,-22 -32,-10 Z" fill="#451A03"/>
+            <circle cx="-11" cy="-5" r="4" fill="#1E293B"/><circle cx="11" cy="-5" r="4" fill="#1E293B"/>
+            <path d="M-9,5 Q0,16 9,5 Z" fill="#EF4444" stroke="#78350F" stroke-width="2"/>
+          </g>
+        </svg>
+      `;
+    }
+
+    /********************************************************************
+     * 3. 讀取 questions.js 題庫與程式狀態
+     ********************************************************************/
+    const BANK = window.QUESTION_BANK || { causal: [], sequence: [] };
+    let causalQuestions = BANK.causal || [];
+    let seqQuestions = BANK.sequence || [];
+
     let currentScreen = 'home';
     let activePatternId = 'because_therefore';
-    let showFuturePatterns = false;
-
-    let causalQuestions = [...DEFAULT_CAUSAL_QUESTIONS];
-    let seqQuestions = [...DEFAULT_SEQ_QUESTIONS];
     let currentQuestionIndex = 0;
     let completedQuestionIds = new Set();
 
@@ -1172,21 +333,14 @@
     let autoCheckTimer = null;
     let isCurrentQuestionSolved = false;
 
-    let pointerDragState = {
-      active: false,
-      cardId: null,
-      startX: 0,
-      startY: 0,
-      moved: false,
-      hoveredSlotKey: null
-    };
+    let pointerDragState = { active: false, cardId: null, startX: 0, startY: 0, moved: false, hoveredSlotKey: null };
 
     function getActiveQuestionList() {
       return activePatternId === 'sequence_4step' ? seqQuestions : causalQuestions;
     }
 
     /********************************************************************
-     * 5. AUDIO & SPEECH SYNTHESIS
+     * 4. 音效與語音朗讀
      ********************************************************************/
     let audioCtx = null;
     function getAudioCtx() {
@@ -1203,52 +357,32 @@
         const ctx = getAudioCtx();
         if (!ctx) return;
         const now = ctx.currentTime;
-        if (type === 'pop') {
-          const osc = ctx.createOscillator(), gain = ctx.createGain();
+        const osc = ctx.createOscillator(), gain = ctx.createGain();
+        if (type === 'pop' || type === 'place') {
           osc.type = 'sine';
-          osc.frequency.setValueAtTime(480, now);
-          osc.frequency.exponentialRampToValueAtTime(680, now + 0.08);
-          gain.gain.setValueAtTime(0.15, now);
-          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.09);
-          osc.connect(gain); gain.connect(ctx.destination);
-          osc.start(now); osc.stop(now + 0.09);
-        } else if (type === 'place') {
-          const osc = ctx.createOscillator(), gain = ctx.createGain();
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(520, now);
-          osc.frequency.exponentialRampToValueAtTime(780, now + 0.11);
-          gain.gain.setValueAtTime(0.2, now);
-          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
-          osc.connect(gain); gain.connect(ctx.destination);
-          osc.start(now); osc.stop(now + 0.12);
-        } else if (type === 'return') {
-          const osc = ctx.createOscillator(), gain = ctx.createGain();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(440, now);
-          osc.frequency.exponentialRampToValueAtTime(300, now + 0.1);
-          gain.gain.setValueAtTime(0.14, now);
+          osc.frequency.setValueAtTime(500, now);
+          osc.frequency.exponentialRampToValueAtTime(750, now + 0.1);
+          gain.gain.setValueAtTime(0.16, now);
           gain.gain.exponentialRampToValueAtTime(0.01, now + 0.11);
           osc.connect(gain); gain.connect(ctx.destination);
           osc.start(now); osc.stop(now + 0.11);
+        } else if (type === 'return' || type === 'gentleHint') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(400, now);
+          osc.frequency.exponentialRampToValueAtTime(300, now + 0.15);
+          gain.gain.setValueAtTime(0.14, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.16);
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.start(now); osc.stop(now + 0.16);
         } else if (type === 'success') {
           [523.25, 659.25, 783.99, 1046.5].forEach((freq, idx) => {
-            const osc = ctx.createOscillator(), gain = ctx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(freq, now + idx * 0.09);
-            gain.gain.setValueAtTime(0.2, now + idx * 0.09);
-            gain.gain.exponentialRampToValueAtTime(0.008, now + idx * 0.09 + 0.3);
-            osc.connect(gain); gain.connect(ctx.destination);
-            osc.start(now + idx * 0.09); osc.stop(now + idx * 0.09 + 0.31);
-          });
-        } else if (type === 'gentleHint') {
-          [392.0, 349.23].forEach((freq, idx) => {
-            const osc = ctx.createOscillator(), gain = ctx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(freq, now + idx * 0.14);
-            gain.gain.setValueAtTime(0.15, now + idx * 0.14);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.14 + 0.22);
-            osc.connect(gain); gain.connect(ctx.destination);
-            osc.start(now + idx * 0.14); osc.stop(now + idx * 0.14 + 0.23);
+            const o = ctx.createOscillator(), g = ctx.createGain();
+            o.type = 'triangle';
+            o.frequency.setValueAtTime(freq, now + idx * 0.09);
+            g.gain.setValueAtTime(0.18, now + idx * 0.09);
+            g.gain.exponentialRampToValueAtTime(0.008, now + idx * 0.09 + 0.28);
+            o.connect(g); g.connect(ctx.destination);
+            o.start(now + idx * 0.09); o.stop(now + idx * 0.09 + 0.29);
           });
         }
       } catch (e) {}
@@ -1264,28 +398,26 @@
       utter.lang = voiceLang;
       utter.rate = voiceRate;
       utter.pitch = 1.05;
-
       const voices = window.speechSynthesis.getVoices();
       const preferred = voices.find(v => v.lang.toLowerCase() === voiceLang.toLowerCase()) ||
                         voices.find(v => v.lang.toLowerCase().includes('zh'));
       if (preferred) utter.voice = preferred;
-
       utter.onend = () => { if (callback) callback(); };
       utter.onerror = () => { if (callback) callback(); };
       window.speechSynthesis.speak(utter);
     }
 
-    function getCardSpokenText(cardObj) {
-      if (!cardObj) return '';
-      if (cardObj.isConjunction) return cardObj.text;
-      return textMode === 'written' ? (cardObj.written || cardObj.cantonese) : (cardObj.cantonese || cardObj.written);
+    function getCardSpokenText(c) {
+      if (!c) return '';
+      if (c.isConjunction) return c.text;
+      return textMode === 'written' ? (c.written || c.cantonese) : (c.cantonese || c.written);
     }
 
-    function getCardDisplayText(cardObj) {
-      if (!cardObj) return '';
-      if (cardObj.isConjunction) return cardObj.text;
+    function getCardDisplayText(c) {
+      if (!c) return '';
+      if (c.isConjunction) return c.text;
       if (textMode === 'none') return '';
-      return textMode === 'written' ? (cardObj.written || cardObj.cantonese) : (cardObj.cantonese || cardObj.written);
+      return textMode === 'written' ? (c.written || c.cantonese) : (c.cantonese || c.written);
     }
 
     function getSequenceWord(stepNum) {
@@ -1302,9 +434,9 @@
         isReadingKaraoke = false;
         return;
       }
-
       const qList = getActiveQuestionList();
       const q = qList[currentQuestionIndex];
+      if (!q) return;
       let steps = [];
 
       if (activePatternId === 'sequence_4step') {
@@ -1313,10 +445,7 @@
           const connWord = getSequenceWord(i);
           const cardObj = slots[key] || (forceReadTargetIfEmpty ? q.steps[i - 1] : null);
           const actionText = cardObj ? getCardSpokenText(cardObj) : `第${i}步`;
-          steps.push({
-            text: `${connWord}，${actionText}`,
-            elIds: [`slot-step${i}`]
-          });
+          steps.push({ text: `${connWord}，${actionText}`, elIds: [`slot-step${i}`] });
         }
       } else {
         const causeText = slots.cause ? getCardSpokenText(slots.cause) : (forceReadTargetIfEmpty ? getCardSpokenText(q.cause) : '原因');
@@ -1329,7 +458,6 @@
 
       isReadingKaraoke = true;
       let idx = 0;
-
       function playNext() {
         clearKaraokeHighlights();
         if (idx >= steps.length || !isReadingKaraoke) {
@@ -1352,12 +480,11 @@
     }
 
     /********************************************************************
-     * 6. HOME SCREEN RENDERING
+     * 5. 主頁選單與練習畫面渲染
      ********************************************************************/
     function initApp() {
       const savedStars = localStorage.getItem('sen_causal_stars');
       if (savedStars) starCount = parseInt(savedStars, 10) || 0;
-
       try {
         const savedDone = localStorage.getItem('sen_completed_qids_v2');
         if (savedDone) completedQuestionIds = new Set(JSON.parse(savedDone));
@@ -1371,7 +498,6 @@
     function renderHomeScreen() {
       const homeStarEl = document.getElementById('homeStarCount');
       if (homeStarEl) homeStarEl.textContent = starCount;
-
       const grid = document.getElementById('patternMenuGrid');
       if (!grid) return;
       grid.innerHTML = '';
@@ -1380,36 +506,33 @@
       const seqSolved = seqQuestions.filter(q => completedQuestionIds.has(q.id)).length;
       const word2Label = textMode === 'written' ? '接著' : '跟住';
 
+      const cFirst = causalQuestions[0] || { cause: { img: 'images/rain_cause.jpg', sceneKey: 'rain_cause' }, effect: { img: 'images/rain_effect.jpg', sceneKey: 'rain_effect' } };
+      const sFirst = (seqQuestions[0] && seqQuestions[0].steps) ? seqQuestions[0].steps : [
+        { img: 'images/s1_1.jpg', sceneKey: 's1_1' }, { img: 'images/s1_2.jpg', sceneKey: 's1_2' },
+        { img: 'images/s1_3.jpg', sceneKey: 's1_3' }, { img: 'images/s1_4.jpg', sceneKey: 's1_4' }
+      ];
+
       const card1 = document.createElement('button');
       card1.type = 'button';
       card1.onclick = () => enterSentencePatternTraining('because_therefore');
       card1.className = 'pattern-menu-card w-full h-full rounded-[2rem] p-3.5 sm:p-5 border-4 bg-white border-emerald-400 hover:border-emerald-500 flex flex-col justify-between text-left relative overflow-hidden cursor-pointer';
       card1.innerHTML = `
         <div class="flex items-center justify-between gap-2 w-full">
-          <span class="bg-emerald-100 text-emerald-900 border-2 border-emerald-300 px-3 py-0.5 rounded-full text-xs sm:text-sm font-black">
-            💡 因果句式 (2格配對)
-          </span>
-          <span class="bg-amber-100 text-amber-900 border-2 border-amber-300 px-3 py-0.5 rounded-full text-xs sm:text-sm font-black">
-            ⭐ ${causalSolved} / ${causalQuestions.length}
-          </span>
+          <span class="bg-emerald-100 text-emerald-900 border-2 border-emerald-300 px-3 py-0.5 rounded-full text-xs sm:text-sm font-black">💡 因果句式 (2格配對)</span>
+          <span class="bg-amber-100 text-amber-900 border-2 border-amber-300 px-3 py-0.5 rounded-full text-xs sm:text-sm font-black">⭐ ${causalSolved} / ${causalQuestions.length}</span>
         </div>
-
         <div class="my-1.5 flex items-center justify-center gap-2 sm:gap-3">
           <span class="bg-orange-500 text-white border-2 border-orange-300 px-4 py-1.5 sm:px-5 sm:py-2 rounded-2xl text-xl sm:text-3xl font-black tracking-widest shadow-sm">因為</span>
           <span class="text-xl sm:text-2xl font-black text-slate-300">➔</span>
           <span class="bg-sky-500 text-white border-2 border-sky-300 px-4 py-1.5 sm:px-5 sm:py-2 rounded-2xl text-xl sm:text-3xl font-black tracking-widest shadow-sm">所以</span>
         </div>
-
         <div class="w-full h-28 sm:h-36 my-1 grid grid-cols-2 gap-2 p-1.5 bg-amber-50/70 rounded-2xl border border-amber-200">
-          <div class="rounded-xl overflow-hidden border-2 border-orange-200 bg-white">${renderCuteSceneSVG('rain_cause')}</div>
-          <div class="rounded-xl overflow-hidden border-2 border-sky-200 bg-white">${renderCuteSceneSVG('rain_effect')}</div>
+          <div class="rounded-xl overflow-hidden border-2 border-orange-200 bg-white">${renderCardVisual(cFirst.cause)}</div>
+          <div class="rounded-xl overflow-hidden border-2 border-sky-200 bg-white">${renderCardVisual(cFirst.effect)}</div>
         </div>
-
         <div class="w-full flex items-center justify-between gap-2 pt-1">
           <span class="text-xs sm:text-sm font-black text-slate-600 truncate">💬 因為出面落大雨，所以出街要擔遮</span>
-          <span class="shrink-0 bg-emerald-500 hover:bg-emerald-400 text-white border-2 border-emerald-600 px-4 sm:px-5 py-1.5 rounded-full font-black text-xs sm:text-base shadow flex items-center gap-1">
-            <span>▶️</span><span>開始練習</span>
-          </span>
+          <span class="shrink-0 bg-emerald-500 hover:bg-emerald-400 text-white border-2 border-emerald-600 px-4 sm:px-5 py-1.5 rounded-full font-black text-xs sm:text-base shadow flex items-center gap-1"><span>▶️</span><span>開始練習</span></span>
         </div>
       `;
       grid.appendChild(card1);
@@ -1420,19 +543,9 @@
       card2.className = 'pattern-menu-card w-full h-full rounded-[2rem] p-3.5 sm:p-5 border-4 bg-white border-sky-400 hover:border-sky-500 flex flex-col justify-between text-left relative overflow-hidden cursor-pointer';
       card2.innerHTML = `
         <div class="flex items-center justify-between gap-2 w-full">
-          <div class="flex items-center gap-1.5">
-            <span class="bg-sky-100 text-sky-900 border-2 border-sky-300 px-3 py-0.5 rounded-full text-xs sm:text-sm font-black">
-              🔢 先後次序句式 (4步排序)
-            </span>
-            <span class="bg-rose-500 text-white px-2.5 py-0.5 rounded-full text-[11px] sm:text-xs font-black animate-bounce">
-              ✨ 新增
-            </span>
-          </div>
-          <span class="bg-amber-100 text-amber-900 border-2 border-amber-300 px-3 py-0.5 rounded-full text-xs sm:text-sm font-black">
-            ⭐ ${seqSolved} / ${seqQuestions.length}
-          </span>
+          <span class="bg-sky-100 text-sky-900 border-2 border-sky-300 px-3 py-0.5 rounded-full text-xs sm:text-sm font-black">🔢 先後次序句式 (4步排序)</span>
+          <span class="bg-amber-100 text-amber-900 border-2 border-amber-300 px-3 py-0.5 rounded-full text-xs sm:text-sm font-black">⭐ ${seqSolved} / ${seqQuestions.length}</span>
         </div>
-
         <div class="my-1.5 flex flex-wrap items-center justify-center gap-1 sm:gap-1.5">
           <span class="bg-orange-500 text-white border-2 border-orange-300 px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-xl text-base sm:text-xl font-black">1 首先</span>
           <span class="text-slate-300 font-black text-sm">➔</span>
@@ -1442,46 +555,18 @@
           <span class="text-slate-300 font-black text-sm">➔</span>
           <span class="bg-emerald-500 text-white border-2 border-emerald-300 px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-xl text-base sm:text-xl font-black">4 最後</span>
         </div>
-
         <div class="w-full h-28 sm:h-36 my-1 grid grid-cols-4 gap-1.5 p-1.5 bg-sky-50/80 rounded-2xl border border-sky-200">
-          <div class="rounded-lg overflow-hidden border-2 border-orange-300 bg-white">${renderCuteSceneSVG('s1_1')}</div>
-          <div class="rounded-lg overflow-hidden border-2 border-sky-300 bg-white">${renderCuteSceneSVG('s1_2')}</div>
-          <div class="rounded-lg overflow-hidden border-2 border-purple-300 bg-white">${renderCuteSceneSVG('s1_3')}</div>
-          <div class="rounded-lg overflow-hidden border-2 border-emerald-300 bg-white">${renderCuteSceneSVG('s1_4')}</div>
+          <div class="rounded-lg overflow-hidden border-2 border-orange-300 bg-white">${renderCardVisual(sFirst[0])}</div>
+          <div class="rounded-lg overflow-hidden border-2 border-sky-300 bg-white">${renderCardVisual(sFirst[1])}</div>
+          <div class="rounded-lg overflow-hidden border-2 border-purple-300 bg-white">${renderCardVisual(sFirst[2])}</div>
+          <div class="rounded-lg overflow-hidden border-2 border-emerald-300 bg-white">${renderCardVisual(sFirst[3])}</div>
         </div>
-
         <div class="w-full flex items-center justify-between gap-2 pt-1">
           <span class="text-xs sm:text-sm font-black text-slate-600 truncate">💬 洗手抹面、朝早返學、種盆栽、整三文治</span>
-          <span class="shrink-0 bg-sky-500 hover:bg-sky-400 text-white border-2 border-sky-600 px-4 sm:px-5 py-1.5 rounded-full font-black text-xs sm:text-base shadow flex items-center gap-1">
-            <span>▶️</span><span>開始練習</span>
-          </span>
+          <span class="shrink-0 bg-sky-500 hover:bg-sky-400 text-white border-2 border-sky-600 px-4 sm:px-5 py-1.5 rounded-full font-black text-xs sm:text-base shadow flex items-center gap-1"><span>▶️</span><span>開始練習</span></span>
         </div>
       `;
       grid.appendChild(card2);
-
-      if (showFuturePatterns) {
-        const futureList = [
-          { tag: '假設條件句式', w1: '如果', w2: '就', ex: '如果肚餓，就食麵', s1: 'hungry_cause', s2: 'hungry_effect' },
-          { tag: '轉折句式', w1: '雖然', w2: '但是', ex: '雖然跌親，但係冇喊', s1: 'fall_cause', s2: 'fall_effect' }
-        ];
-        futureList.forEach(fp => {
-          const fc = document.createElement('button');
-          fc.type = 'button';
-          fc.onclick = () => {
-            playSound('gentleHint');
-            speakText(`「${fp.w1}，${fp.w2}」好快推出，我哋先玩上面兩個練習啦！`);
-          };
-          fc.className = 'pattern-menu-card w-full rounded-[1.75rem] p-3 border-3 bg-white/75 border-slate-300 flex items-center justify-between opacity-75';
-          fc.innerHTML = `
-            <div class="flex items-center gap-2">
-              <span class="bg-slate-200 text-slate-700 px-3 py-1 rounded-xl font-black text-sm">${fp.w1} … ${fp.w2} …</span>
-              <span class="text-xs font-bold text-slate-500">${fp.ex}</span>
-            </div>
-            <span class="bg-slate-200 text-slate-600 px-3 py-1 rounded-full font-black text-xs">即將推出 🔒</span>
-          `;
-          grid.appendChild(fc);
-        });
-      }
     }
 
     function enterSentencePatternTraining(patternId) {
@@ -1489,24 +574,14 @@
       activePatternId = patternId;
       currentQuestionIndex = 0;
       currentScreen = 'training';
-
       document.getElementById('homeScreen').classList.add('hidden');
       document.getElementById('trainingScreen').classList.remove('hidden');
-
-      if (patternId === 'sequence_4step') {
-        const w2 = getSequenceWord(2);
-        speakText(`一齊練習，首先、${w2}、然後、最後！`);
-      } else {
-        speakText('一齊練習，因為、所以！');
-      }
-
       loadQuestion(0);
     }
 
     function switchActivePatternQuick() {
       playSound('pop');
-      const nextPat = activePatternId === 'because_therefore' ? 'sequence_4step' : 'because_therefore';
-      enterSentencePatternTraining(nextPat);
+      enterSentencePatternTraining(activePatternId === 'because_therefore' ? 'sequence_4step' : 'because_therefore');
     }
 
     function goToHomeScreen() {
@@ -1515,19 +590,16 @@
       window.speechSynthesis && window.speechSynthesis.cancel();
       clearKaraokeHighlights();
       isReadingKaraoke = false;
-
       currentScreen = 'home';
       document.getElementById('trainingScreen').classList.add('hidden');
       document.getElementById('homeScreen').classList.remove('hidden');
       renderHomeScreen();
     }
 
-    /********************************************************************
-     * 7. LOADING QUESTIONS & RENDERING WORKSPACE
-     ********************************************************************/
     function loadQuestion(index) {
       if (autoCheckTimer) clearTimeout(autoCheckTimer);
       const qList = getActiveQuestionList();
+      if (!qList.length) return;
       if (index < 0) index = qList.length - 1;
       if (index >= qList.length) index = 0;
       currentQuestionIndex = index;
@@ -1551,9 +623,8 @@
           isConjunction: false,
           cantonese: st.cantonese,
           written: st.written,
-          sceneKey: st.sceneKey,
-          aiPrompt: st.aiPrompt,
-          aiImage: st.aiImage || null
+          img: st.img,
+          sceneKey: st.sceneKey
         }));
 
         if (difficulty === 1) {
@@ -1562,61 +633,23 @@
           lockedCorrectSlots.add('step1');
           lockedCorrectSlots.add('step4');
         }
-
         trayCards = shuffleArray(cards);
-        if (trayCards.every((c, i) => c.stepNumber === i + 1)) {
-          trayCards.reverse();
-        }
+        if (trayCards.every((c, i) => c.stepNumber === i + 1)) trayCards.reverse();
       } else {
-        slots = {
-          conj1: difficulty === 3 ? null : { id: 'fixed-conj1', isConjunction: true, role: 'conj1', text: '因為' },
-          cause: null,
-          conj2: difficulty === 3 ? null : { id: 'fixed-conj2', isConjunction: true, role: 'conj2', text: '所以' },
-          effect: null
-        };
-
+        slots = { cause: null, effect: null };
         const cards = [
-          {
-            id: 'card-cause',
-            role: 'cause',
-            isConjunction: false,
-            cantonese: q.cause.cantonese,
-            written: q.cause.written,
-            sceneKey: q.cause.sceneKey,
-            aiPrompt: q.cause.aiPrompt
-          },
-          {
-            id: 'card-effect',
-            role: 'effect',
-            isConjunction: false,
-            cantonese: q.effect.cantonese,
-            written: q.effect.written,
-            sceneKey: q.effect.sceneKey,
-            aiPrompt: q.effect.aiPrompt
-          }
+          { id: 'card-cause', role: 'cause', isConjunction: false, cantonese: q.cause.cantonese, written: q.cause.written, img: q.cause.img, sceneKey: q.cause.sceneKey },
+          { id: 'card-effect', role: 'effect', isConjunction: false, cantonese: q.effect.cantonese, written: q.effect.written, img: q.effect.img, sceneKey: q.effect.sceneKey }
         ];
-
-        if (difficulty === 2 && q.distractors) {
+        if (difficulty >= 2 && q.distractors) {
           q.distractors.slice(0, 2).forEach((d, idx) => {
-            cards.push({
-              id: `card-dist-${idx}`,
-              role: 'distractor',
-              isConjunction: false,
-              cantonese: d.cantonese,
-              written: d.written || d.cantonese,
-              sceneKey: d.sceneKey
-            });
+            cards.push({ id: `card-dist-${idx}`, role: 'distractor', isConjunction: false, cantonese: d.cantonese, written: d.written || d.cantonese, img: d.img, sceneKey: d.sceneKey });
           });
-        } else if (difficulty === 3) {
-          cards.push({ id: 'card-conj-cause', role: 'conj1', isConjunction: true, text: '因為', cantonese: '因為', written: '因為' });
-          cards.push({ id: 'card-conj-effect', role: 'conj2', isConjunction: true, text: '所以', cantonese: '所以', written: '所以' });
         }
-
         trayCards = shuffleArray(cards);
       }
 
       renderWorkspace();
-    // ensureCurrentQuestionAIImages(false);
     }
 
     function shuffleArray(arr) {
@@ -1632,14 +665,10 @@
       const qList = getActiveQuestionList();
       const prog = document.getElementById('progressText');
       if (prog) prog.textContent = `${currentQuestionIndex + 1} / ${qList.length}`;
-
       const badgeText = document.getElementById('activePatternBadgeText');
       if (badgeText) {
-        badgeText.textContent = activePatternId === 'sequence_4step'
-          ? `首先…${getSequenceWord(2)}…然後…最後…`
-          : '因為…所以…';
+        badgeText.textContent = activePatternId === 'sequence_4step' ? `首先…${getSequenceWord(2)}…然後…最後…` : '因為…所以…';
       }
-
       const starEl = document.getElementById('teacherStarCount');
       if (starEl) starEl.textContent = starCount;
       const homeStarEl = document.getElementById('homeStarCount');
@@ -1649,13 +678,8 @@
     function renderWorkspace() {
       const topContainer = document.getElementById('topSlotsContainer');
       if (!topContainer) return;
-
-      if (activePatternId === 'sequence_4step') {
-        renderFourStepTopZone(topContainer);
-      } else {
-        renderCausalTopZone(topContainer);
-      }
-
+      if (activePatternId === 'sequence_4step') renderFourStepTopZone(topContainer);
+      else renderCausalTopZone(topContainer);
       renderTray();
     }
 
@@ -1677,7 +701,6 @@
 
         let slotInner = '';
         let slotClasses = '';
-
         if (!placed) {
           slotClasses = `flex-1 w-full rounded-2xl border-3 border-dashed ${cfg.slotBorder} bg-white flex flex-col items-center justify-center p-1 cursor-pointer transition-all ${isTargeted ? 'slot-targeted' : ''}`;
           slotInner = `<span class="text-2xl sm:text-4xl font-black text-slate-300">${cfg.num}</span>`;
@@ -1686,14 +709,8 @@
           slotClasses = `flex-1 w-full rounded-2xl border-3 ${borderStyle} bg-white flex flex-col justify-between p-1 transition-all relative overflow-hidden cursor-pointer shadow-sm animate-pop`;
           slotInner = `
             ${isLocked ? `<span class="absolute top-1 right-1 z-10 bg-emerald-500 text-white text-[10px] sm:text-xs font-black px-1.5 py-0.5 rounded-full shadow">✅</span>` : ''}
-            <div class="w-full ${displayText ? 'h-[78%]' : 'h-full'} rounded-xl overflow-hidden bg-slate-50">
-              ${renderCardVisual(placed)}
-            </div>
-            ${displayText ? `
-              <div class="h-[22%] flex items-center justify-center pt-0.5">
-                <div class="text-[11px] sm:text-sm font-black text-slate-800 leading-tight truncate px-1">${displayText}</div>
-              </div>
-            ` : ''}
+            <div class="w-full ${displayText ? 'h-[78%]' : 'h-full'} rounded-xl overflow-hidden bg-slate-50">${renderCardVisual(placed)}</div>
+            ${displayText ? `<div class="h-[22%] flex items-center justify-center pt-0.5"><div class="text-[11px] sm:text-sm font-black text-slate-800 leading-tight truncate px-1">${displayText}</div></div>` : ''}
           `;
         }
 
@@ -1703,9 +720,7 @@
               <span class="w-5 h-5 rounded-full bg-white/25 text-xs font-black flex items-center justify-center">${cfg.num}</span>
               <span class="text-sm sm:text-lg font-black tracking-wider">${cfg.word}</span>
             </button>
-            <div id="slot-${cfg.key}" data-slot-key="${cfg.key}" onclick="handleSlotTap('${cfg.key}')" class="${slotClasses}">
-              ${slotInner}
-            </div>
+            <div id="slot-${cfg.key}" data-slot-key="${cfg.key}" onclick="handleSlotTap('${cfg.key}')" class="${slotClasses}">${slotInner}</div>
           </div>
         `;
       }).join('');
@@ -1715,20 +730,15 @@
       container.className = 'grid grid-cols-2 gap-2.5 sm:gap-5 h-full items-stretch';
       container.innerHTML = `
         <div class="bg-orange-50/90 rounded-3xl p-2 sm:p-3.5 border-3 border-orange-200 flex flex-col sm:flex-row items-center gap-2 sm:gap-3.5 h-full">
-          <div id="conjSlot1Wrapper" class="shrink-0 flex items-center justify-center">
-            <button onclick="speakText('因為')" class="tactile-btn bg-orange-500 hover:bg-orange-400 text-white border-2 border-orange-300 rounded-2xl px-3.5 py-1.5 sm:px-5 sm:py-5 flex items-center justify-center shadow">
-              <span class="text-lg sm:text-3xl font-black tracking-widest">因為</span>
-            </button>
-          </div>
+          <button onclick="speakText('因為')" class="tactile-btn bg-orange-500 hover:bg-orange-400 text-white border-2 border-orange-300 rounded-2xl px-3.5 py-1.5 sm:px-5 sm:py-5 flex items-center justify-center shadow shrink-0">
+            <span class="text-lg sm:text-3xl font-black tracking-widest">因為</span>
+          </button>
           <div id="slot-cause" data-slot-key="cause" onclick="handleSlotTap('cause')" class="flex-1 w-full h-full min-h-[115px] rounded-2xl border-4 border-dashed border-orange-300 bg-white flex flex-col items-center justify-center p-1.5 transition-all relative overflow-hidden cursor-pointer"></div>
         </div>
-
         <div class="bg-sky-50/90 rounded-3xl p-2 sm:p-3.5 border-3 border-sky-200 flex flex-col sm:flex-row items-center gap-2 sm:gap-3.5 h-full">
-          <div id="conjSlot2Wrapper" class="shrink-0 flex items-center justify-center">
-            <button onclick="speakText('所以')" class="tactile-btn bg-sky-500 hover:bg-sky-400 text-white border-2 border-sky-300 rounded-2xl px-3.5 py-1.5 sm:px-5 sm:py-5 flex items-center justify-center shadow">
-              <span class="text-lg sm:text-3xl font-black tracking-widest">所以</span>
-            </button>
-          </div>
+          <button onclick="speakText('所以')" class="tactile-btn bg-sky-500 hover:bg-sky-400 text-white border-2 border-sky-300 rounded-2xl px-3.5 py-1.5 sm:px-5 sm:py-5 flex items-center justify-center shadow shrink-0">
+            <span class="text-lg sm:text-3xl font-black tracking-widest">所以</span>
+          </button>
           <div id="slot-effect" data-slot-key="effect" onclick="handleSlotTap('effect')" class="flex-1 w-full h-full min-h-[115px] rounded-2xl border-4 border-dashed border-sky-300 bg-white flex flex-col items-center justify-center p-1.5 transition-all relative overflow-hidden cursor-pointer"></div>
         </div>
       `;
@@ -1737,7 +747,6 @@
         const slotEl = document.getElementById(`slot-${slotKey}`);
         const placed = slots[slotKey];
         const isTargeted = targetSlotKey === slotKey;
-
         if (!placed) {
           const isCause = slotKey === 'cause';
           slotEl.className = `flex-1 w-full h-full min-h-[115px] rounded-2xl border-4 border-dashed ${isCause ? 'border-orange-300' : 'border-sky-300'} bg-white flex items-center justify-center transition-all relative overflow-hidden cursor-pointer ${isTargeted ? 'slot-targeted' : ''}`;
@@ -1746,14 +755,8 @@
           const displayText = getCardDisplayText(placed);
           slotEl.className = `flex-1 w-full h-full min-h-[115px] rounded-2xl border-4 ${slotKey === 'cause' ? 'border-orange-400' : 'border-sky-400'} bg-white flex flex-col justify-between p-1.5 transition-all relative overflow-hidden cursor-pointer shadow-md animate-pop`;
           slotEl.innerHTML = `
-            <div class="w-full ${displayText ? 'h-[80%]' : 'h-full'} rounded-xl overflow-hidden bg-slate-50">
-              ${renderCardVisual(placed)}
-            </div>
-            ${displayText ? `
-              <div class="h-[20%] flex items-center justify-center pt-1">
-                <div class="text-xs sm:text-lg font-black text-slate-800 leading-none truncate px-1">${displayText}</div>
-              </div>
-            ` : ''}
+            <div class="w-full ${displayText ? 'h-[80%]' : 'h-full'} rounded-xl overflow-hidden bg-slate-50">${renderCardVisual(placed)}</div>
+            ${displayText ? `<div class="h-[20%] flex items-center justify-center pt-1"><div class="text-xs sm:text-lg font-black text-slate-800 leading-none truncate px-1">${displayText}</div></div>` : ''}
           `;
         }
       });
@@ -1766,15 +769,10 @@
 
       const placedIds = new Set(Object.values(slots).filter(Boolean).map(c => c.id));
       const availableCards = trayCards.filter(c => !placedIds.has(c.id));
-
       trayEl.className = 'flex flex-wrap justify-center items-stretch gap-2.5 sm:gap-4 h-full w-full';
 
       if (availableCards.length === 0) {
-        trayEl.innerHTML = `
-          <div class="col-span-2 lg:col-span-4 flex items-center justify-center h-full">
-            <span class="text-4xl sm:text-5xl animate-bounce">🌟</span>
-          </div>
-        `;
+        trayEl.innerHTML = `<div class="flex items-center justify-center h-full"><span class="text-4xl sm:text-5xl animate-bounce">🌟</span></div>`;
         return;
       }
 
@@ -1783,37 +781,21 @@
         const cardEl = document.createElement('div');
         cardEl.dataset.cardId = card.id;
         cardEl.onpointerdown = (e) => handleCardPointerDown(e, card);
-
         cardEl.className = 'storybook-card cursor-pointer rounded-2xl sm:rounded-3xl p-1.5 sm:p-2 border-4 border-amber-300 bg-white hover:border-amber-400 flex flex-col justify-between h-full min-h-[115px] max-w-[240px] flex-1 basis-40 sm:basis-48 overflow-hidden';
         cardEl.innerHTML = `
-          <div class="w-full ${displayText ? 'h-[80%]' : 'h-full'} rounded-xl sm:rounded-2xl overflow-hidden bg-slate-50">
-            ${renderCardVisual(card)}
-          </div>
-          ${displayText ? `
-            <div class="h-[20%] flex items-center justify-center pt-0.5">
-              <div class="text-xs sm:text-lg font-black text-slate-800 leading-tight truncate px-1">
-                ${displayText}
-              </div>
-            </div>
-          ` : ''}
+          <div class="w-full ${displayText ? 'h-[80%]' : 'h-full'} rounded-xl sm:rounded-2xl overflow-hidden bg-slate-50">${renderCardVisual(card)}</div>
+          ${displayText ? `<div class="h-[20%] flex items-center justify-center pt-0.5"><div class="text-xs sm:text-lg font-black text-slate-800 leading-tight truncate px-1">${displayText}</div></div>` : ''}
         `;
         trayEl.appendChild(cardEl);
       });
     }
 
     /********************************************************************
-     * 8. TOUCH INTERACTION
+     * 6. 觸控與拖放邏輯
      ********************************************************************/
     function handleCardPointerDown(e, card) {
       if (e.button && e.button !== 0) return;
-      pointerDragState = {
-        active: true,
-        cardId: card.id,
-        startX: e.clientX,
-        startY: e.clientY,
-        moved: false,
-        hoveredSlotKey: null
-      };
+      pointerDragState = { active: true, cardId: card.id, startX: e.clientX, startY: e.clientY, moved: false, hoveredSlotKey: null };
     }
 
     function setupGlobalPointerListeners() {
@@ -1821,16 +803,11 @@
         if (!pointerDragState.active) return;
         const dx = e.clientX - pointerDragState.startX;
         const dy = e.clientY - pointerDragState.startY;
-
         if (!pointerDragState.moved && Math.hypot(dx, dy) > 10) {
           pointerDragState.moved = true;
           const card = trayCards.find(c => c.id === pointerDragState.cardId);
-          if (card) {
-            playSound('pop');
-            showTouchDragGhost(card, e.clientX, e.clientY);
-          }
+          if (card) { playSound('pop'); showTouchDragGhost(card, e.clientX, e.clientY); }
         }
-
         if (pointerDragState.moved) {
           moveTouchDragGhost(e.clientX, e.clientY);
           highlightSlotUnderPointer(e.clientX, e.clientY);
@@ -1843,39 +820,24 @@
         pointerDragState.active = false;
         hideTouchDragGhost();
         clearSlotHoverHighlights();
-
         const card = trayCards.find(c => c.id === cardId);
         if (!card) return;
-
-        if (moved && hoveredSlotKey && !lockedCorrectSlots.has(hoveredSlotKey)) {
-          placeCardIntoSlot(card, hoveredSlotKey);
-        } else if (!moved) {
-          handleCardDirectTap(card);
-        }
+        if (moved && hoveredSlotKey && !lockedCorrectSlots.has(hoveredSlotKey)) placeCardIntoSlot(card, hoveredSlotKey);
+        else if (!moved) handleCardDirectTap(card);
       });
     }
 
     function handleCardDirectTap(card) {
       let destSlot = null;
-
-      if (targetSlotKey && !slots[targetSlotKey] && !lockedCorrectSlots.has(targetSlotKey)) {
-        destSlot = targetSlotKey;
-      } else if (activePatternId === 'sequence_4step') {
-        for (let i = 1; i <= 4; i++) {
-          const k = `step${i}`;
-          if (!slots[k]) { destSlot = k; break; }
-        }
+      if (targetSlotKey && !slots[targetSlotKey] && !lockedCorrectSlots.has(targetSlotKey)) destSlot = targetSlotKey;
+      else if (activePatternId === 'sequence_4step') {
+        for (let i = 1; i <= 4; i++) { if (!slots[`step${i}`]) { destSlot = `step${i}`; break; } }
       } else {
         if (!slots.cause) destSlot = 'cause';
         else if (!slots.effect) destSlot = 'effect';
       }
-
-      if (destSlot) {
-        placeCardIntoSlot(card, destSlot);
-      } else {
-        playSound('pop');
-        speakText(getCardSpokenText(card));
-      }
+      if (destSlot) placeCardIntoSlot(card, destSlot);
+      else { playSound('pop'); speakText(getCardSpokenText(card)); }
     }
 
     function placeCardIntoSlot(card, slotKey) {
@@ -1895,7 +857,6 @@
         return;
       }
       hideActionOverlay();
-
       if (slots[slotKey]) {
         slots[slotKey] = null;
         targetSlotKey = null;
@@ -1914,22 +875,17 @@
       const displayText = getCardDisplayText(card);
       ghost.innerHTML = `
         <div class="w-full h-full rounded-2xl p-1.5 bg-white border-4 border-amber-400 shadow-2xl flex flex-col justify-between overflow-hidden">
-          <div class="w-full ${displayText ? 'h-[78%]' : 'h-full'} rounded-xl overflow-hidden bg-slate-100">
-            ${renderCardVisual(card)}
-          </div>
+          <div class="w-full ${displayText ? 'h-[78%]' : 'h-full'} rounded-xl overflow-hidden bg-slate-100">${renderCardVisual(card)}</div>
           ${displayText ? `<div class="text-xs font-black text-slate-800 text-center truncate px-1">${displayText}</div>` : ''}
         </div>
       `;
-      ghost.style.left = `${x}px`;
-      ghost.style.top = `${y}px`;
+      ghost.style.left = `${x}px`; ghost.style.top = `${y}px`;
       ghost.classList.remove('hidden');
     }
 
     function moveTouchDragGhost(x, y) {
       const ghost = document.getElementById('touchDragGhost');
-      if (!ghost) return;
-      ghost.style.left = `${x}px`;
-      ghost.style.top = `${y}px`;
+      if (ghost) { ghost.style.left = `${x}px`; ghost.style.top = `${y}px`; }
     }
 
     function hideTouchDragGhost() {
@@ -1940,17 +896,11 @@
     function highlightSlotUnderPointer(x, y) {
       clearSlotHoverHighlights();
       const elUnder = document.elementFromPoint(x, y);
-      if (!elUnder) {
-        pointerDragState.hoveredSlotKey = null;
-        return;
-      }
-      const slotContainer = elUnder.closest('[data-slot-key]');
+      const slotContainer = elUnder ? elUnder.closest('[data-slot-key]') : null;
       if (slotContainer && !lockedCorrectSlots.has(slotContainer.dataset.slotKey)) {
         pointerDragState.hoveredSlotKey = slotContainer.dataset.slotKey;
         slotContainer.classList.add('slot-hover-target');
-      } else {
-        pointerDragState.hoveredSlotKey = null;
-      }
+      } else pointerDragState.hoveredSlotKey = null;
     }
 
     function clearSlotHoverHighlights() {
@@ -1958,36 +908,24 @@
     }
 
     /********************************************************************
-     * 9. AUTO-EVALUATION & POSITIVE SEN FEEDBACK
+     * 7. 自動批改與獎勵
      ********************************************************************/
     function scheduleAutoCheckIfFull() {
       if (autoCheckTimer) clearTimeout(autoCheckTimer);
-
       if (activePatternId === 'sequence_4step') {
-        const allFourFilled = Boolean(slots.step1 && slots.step2 && slots.step3 && slots.step4);
-        if (allFourFilled) {
-          autoCheckTimer = setTimeout(evaluateFourStepSequence, 420);
-        }
+        if (slots.step1 && slots.step2 && slots.step3 && slots.step4) autoCheckTimer = setTimeout(evaluateFourStepSequence, 420);
       } else {
-        const hasBoth = Boolean(slots.cause && slots.effect);
-        if (hasBoth) {
-          autoCheckTimer = setTimeout(evaluateCausalAnswer, 420);
-        }
+        if (slots.cause && slots.effect) autoCheckTimer = setTimeout(evaluateCausalAnswer, 420);
       }
     }
 
     function evaluateFourStepSequence() {
       const keys = ['step1', 'step2', 'step3', 'step4'];
       const wrongKeys = [];
-
       keys.forEach((k, idx) => {
-        if (slots[k] && slots[k].stepNumber === idx + 1) {
-          lockedCorrectSlots.add(k);
-        } else {
-          wrongKeys.push(k);
-        }
+        if (slots[k] && slots[k].stepNumber === idx + 1) lockedCorrectSlots.add(k);
+        else wrongKeys.push(k);
       });
-
       renderWorkspace();
 
       if (wrongKeys.length === 0) {
@@ -2003,44 +941,21 @@
       playSound('gentleHint');
       wrongKeys.forEach(k => {
         const el = document.getElementById(`slot-${k}`);
-        if (el) {
-          el.classList.add('shake-feedback');
-          setTimeout(() => el.classList.remove('shake-feedback'), 600);
-        }
+        if (el) { el.classList.add('shake-feedback'); setTimeout(() => el.classList.remove('shake-feedback'), 600); }
       });
-
-      const correctCount = 4 - wrongKeys.length;
-      if (correctCount > 0) {
-        speakText(`做得好，有 ${correctCount} 張擺啱咗喇！試下調轉埋其餘圖卡啦！`);
-      } else {
-        speakText('諗下邊樣做先，邊樣做最後？試下調轉佢哋啦！');
-      }
-
-      showSequenceHelperButtons(wrongKeys);
-    }
-
-    function showSequenceHelperButtons(wrongKeys) {
+      speakText('試下調轉錯咗嘅圖卡啦！');
       const bar = document.getElementById('actionOverlayBar');
       const content = document.getElementById('actionOverlayContent');
       bar.classList.remove('hidden');
-
       content.innerHTML = `
-        <button onclick="returnWrongSequenceCards()" class="tactile-btn bg-amber-500 hover:bg-amber-400 text-white border-3 border-white px-4 sm:px-6 py-2 rounded-full font-black text-sm sm:text-lg shadow-xl flex items-center gap-1.5 animate-pop">
-          <span>↩️</span>
-          <span>重排錯嘅卡</span>
-        </button>
-        <button onclick="autoFixSequenceCards()" class="tactile-btn bg-orange-500 hover:bg-orange-400 text-white border-3 border-white px-4 sm:px-6 py-2 rounded-full font-black text-sm sm:text-lg shadow-xl flex items-center gap-1.5 animate-pop">
-          <span>🔄</span>
-          <span>幫手調啱位置</span>
-        </button>
+        <button onclick="returnWrongSequenceCards()" class="tactile-btn bg-amber-500 hover:bg-amber-400 text-white border-3 border-white px-4 sm:px-6 py-2 rounded-full font-black text-sm sm:text-lg shadow-xl flex items-center gap-1.5 animate-pop"><span>↩️</span><span>重排錯嘅卡</span></button>
+        <button onclick="autoFixSequenceCards()" class="tactile-btn bg-orange-500 hover:bg-orange-400 text-white border-3 border-white px-4 sm:px-6 py-2 rounded-full font-black text-sm sm:text-lg shadow-xl flex items-center gap-1.5 animate-pop"><span>🔄</span><span>幫手調啱位置</span></button>
       `;
     }
 
     function returnWrongSequenceCards() {
       playSound('return');
-      ['step1', 'step2', 'step3', 'step4'].forEach(k => {
-        if (!lockedCorrectSlots.has(k)) slots[k] = null;
-      });
+      ['step1', 'step2', 'step3', 'step4'].forEach(k => { if (!lockedCorrectSlots.has(k)) slots[k] = null; });
       hideActionOverlay();
       renderWorkspace();
     }
@@ -2059,7 +974,6 @@
     function evaluateCausalAnswer() {
       const isCauseOk = slots.cause && slots.cause.role === 'cause';
       const isEffectOk = slots.effect && slots.effect.role === 'effect';
-
       if (isCauseOk && isEffectOk) {
         isCurrentQuestionSolved = true;
         playSound('success');
@@ -2069,77 +983,35 @@
         setTimeout(() => speakCurrentSentence(false), 300);
         return;
       }
-
-      const isSwapped = slots.cause && slots.effect && slots.cause.role === 'effect' && slots.effect.role === 'cause';
-      if (isSwapped) {
+      if (slots.cause && slots.effect && slots.cause.role === 'effect' && slots.effect.role === 'cause') {
         playSound('gentleHint');
         speakText('諗下邊樣發生先？試下調轉佢哋啦！');
-        ['slot-cause', 'slot-effect'].forEach(id => {
-          const el = document.getElementById(id);
-          if (el) {
-            el.classList.add('shake-feedback');
-            setTimeout(() => el.classList.remove('shake-feedback'), 600);
-          }
-        });
-        showCausalSwapButton();
+        const bar = document.getElementById('actionOverlayBar');
+        const content = document.getElementById('actionOverlayContent');
+        bar.classList.remove('hidden');
+        content.innerHTML = `<button onclick="swapCausalCards()" class="tactile-btn bg-orange-500 hover:bg-orange-400 text-white border-4 border-white px-7 py-2.5 rounded-full font-black text-base sm:text-xl shadow-xl flex items-center gap-2 animate-pop"><span>🔄</span><span>調轉圖卡</span></button>`;
         return;
       }
-
       playSound('gentleHint');
       speakText('唔係呢張喎，再試一次啦！');
       setTimeout(() => {
         if (!isCauseOk) slots.cause = null;
         if (!isEffectOk) slots.effect = null;
-        playSound('return');
         renderWorkspace();
       }, 600);
     }
 
-    function showCausalSwapButton() {
-      const bar = document.getElementById('actionOverlayBar');
-      const content = document.getElementById('actionOverlayContent');
-      bar.classList.remove('hidden');
-      content.innerHTML = `
-        <button onclick="swapCausalCards()" class="tactile-btn bg-orange-500 hover:bg-orange-400 text-white border-4 border-white px-7 py-2.5 rounded-full font-black text-base sm:text-xl shadow-xl flex items-center gap-2 animate-pop">
-          <span>🔄</span><span>調轉圖卡</span>
-        </button>
-      `;
-    }
-
     function swapCausalCards() {
       playSound('place');
-      const tmp = slots.cause;
-      slots.cause = slots.effect;
-      slots.effect = tmp;
-      hideActionOverlay();
-      renderWorkspace();
-      scheduleAutoCheckIfFull();
+      const tmp = slots.cause; slots.cause = slots.effect; slots.effect = tmp;
+      hideActionOverlay(); renderWorkspace(); scheduleAutoCheckIfFull();
     }
 
     function showNextQuestionButton() {
       const bar = document.getElementById('actionOverlayBar');
       const content = document.getElementById('actionOverlayContent');
       bar.classList.remove('hidden');
-
-      const qList = getActiveQuestionList();
-      const isLast = currentQuestionIndex === qList.length - 1;
-
-      if (isLast) {
-        content.innerHTML = `
-          <button onclick="goToHomeScreen()" class="tactile-btn bg-amber-400 hover:bg-amber-300 text-slate-900 border-4 border-white px-5 py-2 rounded-full font-black text-base sm:text-xl shadow-xl flex items-center gap-2 animate-bounce">
-            <span>🏠</span><span>完成返主頁</span>
-          </button>
-          <button onclick="nextQuestion()" class="tactile-btn bg-emerald-500 hover:bg-emerald-400 text-white border-4 border-white px-5 py-2 rounded-full font-black text-base sm:text-xl shadow-xl flex items-center gap-2 animate-bounce">
-            <span>再玩一輪</span><span>🔄</span>
-          </button>
-        `;
-      } else {
-        content.innerHTML = `
-          <button onclick="nextQuestion()" class="tactile-btn bg-emerald-500 hover:bg-emerald-400 text-white border-4 border-white px-7 py-2.5 rounded-full font-black text-lg sm:text-2xl shadow-xl flex items-center gap-2.5 animate-bounce">
-            <span>下一題</span><span class="text-xl sm:text-2xl">➡️</span>
-          </button>
-        `;
-      }
+      content.innerHTML = `<button onclick="nextQuestion()" class="tactile-btn bg-emerald-500 hover:bg-emerald-400 text-white border-4 border-white px-7 py-2.5 rounded-full font-black text-lg sm:text-2xl shadow-xl flex items-center gap-2.5 animate-bounce"><span>下一題</span><span>➡️</span></button>`;
     }
 
     function hideActionOverlay() {
@@ -2150,375 +1022,76 @@
     function addStarReward() {
       starCount++;
       localStorage.setItem('sen_causal_stars', String(starCount));
-
-      const qList = getActiveQuestionList();
-      const q = qList[currentQuestionIndex];
+      const q = getActiveQuestionList()[currentQuestionIndex];
       if (q && q.id) {
         completedQuestionIds.add(q.id);
-        try {
-          localStorage.setItem('sen_completed_qids_v2', JSON.stringify([...completedQuestionIds]));
-        } catch (e) {}
+        try { localStorage.setItem('sen_completed_qids_v2', JSON.stringify([...completedQuestionIds])); } catch (e) {}
       }
       updateProgressTopBar();
     }
 
-    function prevQuestion() {
-      playSound('pop');
-      loadQuestion(currentQuestionIndex - 1);
-    }
-
-    function nextQuestion() {
-      playSound('pop');
-      loadQuestion(currentQuestionIndex + 1);
-    }
-
+    function prevQuestion() { playSound('pop'); loadQuestion(currentQuestionIndex - 1); }
+    function nextQuestion() { playSound('pop'); loadQuestion(currentQuestionIndex + 1); }
     function jumpToQuestion(idxStr) {
-      playSound('pop');
       const idx = parseInt(idxStr, 10);
-      if (!isNaN(idx)) {
-        closeTeacherModal();
-        if (currentScreen !== 'training') {
-          currentScreen = 'training';
-          document.getElementById('homeScreen').classList.add('hidden');
-          document.getElementById('trainingScreen').classList.remove('hidden');
-        }
-        loadQuestion(idx);
-      }
+      if (!isNaN(idx)) { closeTeacherModal(); loadQuestion(idx); }
     }
 
-    /********************************************************************
-     * 10. TEACHER MODAL & AI WORKSHOP
-     ********************************************************************/
-    function openTeacherModal() {
-      playSound('pop');
-      aiWorkshopTargetPattern = activePatternId;
-      updateTeacherControlsUI();
-      renderStyleOptionsGrid();
-      document.getElementById('teacherModal').classList.remove('hidden');
+    function openTeacherModal() { playSound('pop'); updateTeacherControlsUI(); document.getElementById('teacherModal').classList.remove('hidden'); }
+    function closeTeacherModal() { document.getElementById('teacherModal').classList.add('hidden'); }
+    function selectPatternFromModal(patId) { closeTeacherModal(); enterSentencePatternTraining(patId); }
+    function setDifficulty(lvl) { playSound('pop'); difficulty = lvl; updateTeacherControlsUI(); if (currentScreen === 'training') loadQuestion(currentQuestionIndex); }
+    function setTextMode(mode) { playSound('pop'); textMode = mode; updateTeacherControlsUI(); if (currentScreen === 'training') renderWorkspace(); else renderHomeScreen(); }
+    function toggleVoiceLang() {
+      playSound('pop'); voiceLang = voiceLang === 'zh-HK' ? 'zh-CN' : 'zh-HK';
+      document.getElementById('voiceLangBtn').textContent = voiceLang === 'zh-HK' ? '🔊 粵語發音' : '🔊 普通話發音';
     }
-
-    function closeTeacherModal() {
-      document.getElementById('teacherModal').classList.add('hidden');
-    }
-
-    function setAiWorkshopPattern(patId) {
-      playSound('pop');
-      aiWorkshopTargetPattern = patId;
-      updateTeacherControlsUI();
-    }
-
-    function selectPatternFromModal(patId) {
-      closeTeacherModal();
-      enterSentencePatternTraining(patId);
-    }
-
-    function toggleShowFuturePatterns() {
-      playSound('pop');
-      showFuturePatterns = !showFuturePatterns;
-      updateTeacherControlsUI();
-      renderHomeScreen();
+    function toggleVoiceSpeed() {
+      playSound('pop'); voiceRate = voiceRate === 0.85 ? 1.0 : 0.85;
+      document.getElementById('voiceSpeedBtn').textContent = voiceRate === 0.85 ? '🐢 慢速朗讀' : '🐇 正常語速';
     }
 
     function updateTeacherControlsUI() {
-      const cBtn = document.getElementById('modalPatCausalBtn');
-      const sBtn = document.getElementById('modalPatSeqBtn');
-      if (cBtn && sBtn) {
-        cBtn.className = activePatternId === 'because_therefore'
-          ? 'py-2.5 px-3 rounded-xl font-black text-xs sm:text-sm border-2 bg-emerald-500 text-white border-emerald-600 flex items-center justify-between'
-          : 'py-2.5 px-3 rounded-xl font-black text-xs sm:text-sm border-2 bg-white text-slate-700 border-slate-200 flex items-center justify-between';
-        sBtn.className = activePatternId === 'sequence_4step'
-          ? 'py-2.5 px-3 rounded-xl font-black text-xs sm:text-sm border-2 bg-sky-500 text-white border-sky-600 flex items-center justify-between'
-          : 'py-2.5 px-3 rounded-xl font-black text-xs sm:text-sm border-2 bg-white text-slate-700 border-slate-200 flex items-center justify-between';
-      }
-
       const select = document.getElementById('questionSelect');
       if (select) {
         select.innerHTML = '';
-        const qList = getActiveQuestionList();
-        qList.forEach((q, idx) => {
+        getActiveQuestionList().forEach((q, idx) => {
           const opt = document.createElement('option');
           opt.value = idx;
-          if (activePatternId === 'sequence_4step') {
-            opt.textContent = `${idx + 1}. 【${q.title || '四步次序'}】${q.steps[0].cantonese} ➔ ... ➔ ${q.steps[3].cantonese}`;
-          } else {
-            opt.textContent = `${idx + 1}. 因為「${q.cause.cantonese}」➔ 所以「${q.effect.cantonese}」`;
-          }
+          opt.textContent = activePatternId === 'sequence_4step'
+            ? `${idx + 1}. 【${q.title || '四步次序'}】${q.steps[0].cantonese} ➔ ...`
+            : `${idx + 1}. 因為「${q.cause.cantonese}」➔ 所以「${q.effect.cantonese}」`;
           select.appendChild(opt);
         });
         select.value = currentQuestionIndex;
       }
-
       [1, 2, 3].forEach(lvl => {
         const el = document.getElementById(`diffBtn${lvl}`);
-        if (el) {
-          el.className = difficulty === lvl
-            ? 'py-2.5 px-2 rounded-xl font-black text-xs sm:text-sm border-2 bg-amber-400 text-slate-900 border-amber-500 shadow-sm'
-            : 'py-2.5 px-2 rounded-xl font-black text-xs sm:text-sm border-2 bg-white text-slate-600 border-slate-200';
-        }
+        if (el) el.className = difficulty === lvl ? 'py-2.5 px-2 rounded-xl font-black text-xs sm:text-sm border-2 bg-amber-400 text-slate-900 border-amber-500' : 'py-2.5 px-2 rounded-xl font-black text-xs sm:text-sm border-2 bg-white text-slate-600 border-slate-200';
       });
-
-      const descEl = document.getElementById('diffDescText');
-      if (descEl) {
-        if (activePatternId === 'sequence_4step') {
-          descEl.textContent = difficulty === 1
-            ? '🌱 初階：已自動固定第1步同第4步，小朋友只需排列中間2張圖卡。'
-            : (difficulty === 2 ? '🌿 中階：完整4步次序圖卡自由排列，附彩色編號提示。' : '🌳 高階：完整4步排列，隱藏顏色提示。');
-        } else {
-          descEl.textContent = difficulty === 1
-            ? '🌱 初階：2張因果圖卡直接配對。'
-            : (difficulty === 2 ? '🌿 中階：加入2張干擾圖卡（4選2）。' : '🌳 高階：連同連接詞重組句子。');
-        }
-      }
-
-      [
-        { id: 'tmBtnCantonese', m: 'cantonese' },
-        { id: 'tmBtnWritten', m: 'written' },
-        { id: 'tmBtnNone', m: 'none' }
-      ].forEach(item => {
+      [{ id: 'tmBtnCantonese', m: 'cantonese' }, { id: 'tmBtnWritten', m: 'written' }, { id: 'tmBtnNone', m: 'none' }].forEach(item => {
         const el = document.getElementById(item.id);
-        if (el) {
-          el.className = textMode === item.m
-            ? 'py-2 px-1.5 rounded-xl font-black text-xs border-2 bg-emerald-500 text-white border-emerald-600'
-            : 'py-2 px-1.5 rounded-xl font-black text-xs border-2 bg-white text-slate-600 border-slate-200';
-        }
+        if (el) el.className = textMode === item.m ? 'py-2 px-1.5 rounded-xl font-black text-xs border-2 bg-emerald-500 text-white border-emerald-600' : 'py-2 px-1.5 rounded-xl font-black text-xs border-2 bg-white text-slate-600 border-slate-200';
       });
-
-      const fBtn = document.getElementById('showFutureToggleBtn');
-      if (fBtn) {
-        fBtn.textContent = showFuturePatterns ? '顯示中' : '已隱藏';
-        fBtn.className = showFuturePatterns
-          ? 'px-3 py-1.5 rounded-xl font-black text-xs border-2 bg-indigo-600 text-white border-indigo-700'
-          : 'px-3 py-1.5 rounded-xl font-black text-xs border-2 bg-white text-slate-600 border-slate-300';
-      }
-
-      const genCausalBtn = document.getElementById('aiGenModeCausalBtn');
-      const genSeqBtn = document.getElementById('aiGenModeSeqBtn');
-      if (genCausalBtn && genSeqBtn) {
-        genCausalBtn.className = aiWorkshopTargetPattern === 'because_therefore'
-          ? 'px-2.5 py-1 rounded-lg text-xs font-black bg-indigo-600 text-white'
-          : 'px-2.5 py-1 rounded-lg text-xs font-black text-slate-600 hover:bg-slate-100';
-        genSeqBtn.className = aiWorkshopTargetPattern === 'sequence_4step'
-          ? 'px-2.5 py-1 rounded-lg text-xs font-black bg-indigo-600 text-white'
-          : 'px-2.5 py-1 rounded-lg text-xs font-black text-slate-600 hover:bg-slate-100';
-      }
-
       updateProgressTopBar();
-    }
-
-    function setDifficulty(lvl) {
-      playSound('pop');
-      difficulty = lvl;
-      updateTeacherControlsUI();
-      if (currentScreen === 'training') loadQuestion(currentQuestionIndex);
-    }
-
-    function setTextMode(mode) {
-      playSound('pop');
-      textMode = mode;
-      updateTeacherControlsUI();
-      if (currentScreen === 'training') renderWorkspace();
-      else renderHomeScreen();
-    }
-
-    function toggleVoiceLang() {
-      playSound('pop');
-      voiceLang = voiceLang === 'zh-HK' ? 'zh-CN' : 'zh-HK';
-      const btn = document.getElementById('voiceLangBtn');
-      if (btn) btn.textContent = voiceLang === 'zh-HK' ? '🔊 粵語發音' : '🔊 普通話發音';
-    }
-
-    function toggleVoiceSpeed() {
-      playSound('pop');
-      voiceRate = voiceRate === 0.85 ? 1.0 : 0.85;
-      const btn = document.getElementById('voiceSpeedBtn');
-      if (btn) btn.textContent = voiceRate === 0.85 ? '🐢 慢速朗讀' : '🐇 正常語速';
-    }
-
-    function renderStyleOptionsGrid() {
-      const grid = document.getElementById('styleOptionsGrid');
-      if (!grid) return;
-      grid.innerHTML = '';
-      Object.values(AI_ART_STYLES).forEach(st => {
-        const isCurrent = st.id === currentArtStyle;
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.onclick = () => {
-          playSound('pop');
-          currentArtStyle = st.id;
-          localStorage.setItem('sen_ai_art_style', st.id);
-          renderStyleOptionsGrid();
-          trayCards.forEach(c => { if (!c.isConjunction) c.aiImage = null; });
-          ensureCurrentQuestionAIImages(false);
-        };
-        btn.className = `p-2 rounded-xl border-2 text-xs font-black ${isCurrent ? 'bg-fuchsia-600 text-white border-fuchsia-700' : 'bg-white text-slate-700 border-fuchsia-200'}`;
-        btn.textContent = st.name;
-        grid.appendChild(btn);
-      });
-    }
-
-    function fillTopicChip(text) {
-      const input = document.getElementById('aiTopicInput');
-      if (input) input.value = text;
-    }
-
-    async function handleGenerateFromTopic() {
-      const input = document.getElementById('aiTopicInput');
-      const topic = input.value.trim();
-      if (!topic) return input.focus();
-
-      const btn = document.getElementById('aiGenerateTopicBtn');
-      const box = document.getElementById('workshopStatusBox');
-      const txt = document.getElementById('workshopStatusText');
-
-      btn.disabled = true;
-      box.classList.remove('hidden');
-      const targetMode = aiWorkshopTargetPattern || activePatternId;
-      txt.textContent = `正在根據「${topic}」設計題目與 AI 圖卡...`;
-
-      try {
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-
-        if (targetMode === 'sequence_4step') {
-          const payload = {
-            contents: [{
-              role: 'user',
-              parts: [{
-                text: `你是一位香港幼兒言語治療師。請根據主題「${topic}」，設計一題4步先後次序句式（首先、跟住、然後、最後）。請使用香港道地廣東話（例如用「抹面」而非「抹臉」），每步4至7字，並為每一步提供具體描述同一位5歲可愛圓臉香港小朋友連續完成動作的英文 imagePrompt。`
-              }]
-            }],
-            generationConfig: {
-              responseMimeType: 'application/json',
-              responseSchema: {
-                type: 'OBJECT',
-                properties: {
-                  title: { type: 'STRING' },
-                  steps: {
-                    type: 'ARRAY',
-                    items: {
-                      type: 'OBJECT',
-                      properties: {
-                        cantonese: { type: 'STRING' },
-                        written: { type: 'STRING' },
-                        imagePrompt: { type: 'STRING' }
-                      },
-                      required: ['cantonese', 'written', 'imagePrompt']
-                    }
-                  }
-                },
-                required: ['title', 'steps']
-              }
-            }
-          };
-
-          const res = await fetchWithRetry(apiUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          }, 2);
-          const parsed = JSON.parse(res?.candidates?.[0]?.content?.parts?.[0]?.text);
-          const qId = 'seq_ai_' + Date.now();
-          const newSteps = (parsed.steps || []).slice(0, 4).map((s, idx) => ({
-            cantonese: s.cantonese,
-            written: s.written,
-            sceneKey: `s1_${idx + 1}`,
-            aiPrompt: s.imagePrompt
-          }));
-
-          if (newSteps.length === 4) {
-            seqQuestions.push({ id: qId, title: parsed.title || topic, steps: newSteps });
-            input.value = '';
-            closeTeacherModal();
-            enterSentencePatternTraining('sequence_4step');
-            loadQuestion(seqQuestions.length - 1);
-          }
-        } else {
-          const payload = {
-            contents: [{
-              role: 'user',
-              parts: [{
-                text: `你是一位香港幼兒言語治療師。請根據主題「${topic}」，設計一題「因為…所以…」因果句式（4至7字香港口語，用「抹面」而非「抹臉」）。`
-              }]
-            }],
-            generationConfig: {
-              responseMimeType: 'application/json',
-              responseSchema: {
-                type: 'OBJECT',
-                properties: {
-                  causeCantonese: { type: 'STRING' },
-                  causeWritten: { type: 'STRING' },
-                  causeImagePrompt: { type: 'STRING' },
-                  effectCantonese: { type: 'STRING' },
-                  effectWritten: { type: 'STRING' },
-                  effectImagePrompt: { type: 'STRING' }
-                },
-                required: ['causeCantonese', 'causeWritten', 'causeImagePrompt', 'effectCantonese', 'effectWritten', 'effectImagePrompt']
-              }
-            }
-          };
-
-          const res = await fetchWithRetry(apiUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          }, 2);
-          const parsed = JSON.parse(res?.candidates?.[0]?.content?.parts?.[0]?.text);
-          const qId = 'c_ai_' + Date.now();
-          causalQuestions.push({
-            id: qId,
-            cause: { cantonese: parsed.causeCantonese, written: parsed.causeWritten, sceneKey: 'rain_cause', aiPrompt: parsed.causeImagePrompt },
-            effect: { cantonese: parsed.effectCantonese, written: parsed.effectWritten, sceneKey: 'rain_effect', aiPrompt: parsed.effectImagePrompt },
-            distractors: DEFAULT_CAUSAL_QUESTIONS[0].distractors
-          });
-          input.value = '';
-          closeTeacherModal();
-          enterSentencePatternTraining('because_therefore');
-          loadQuestion(causalQuestions.length - 1);
-        }
-      } catch (e) {
-        txt.textContent = '⚠️ 生成失敗，請再試一次。';
-      } finally {
-        btn.disabled = false;
-        setTimeout(() => box.classList.add('hidden'), 900);
-      }
     }
 
     function launchConfetti() {
       const canvas = document.getElementById('confettiCanvas');
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-
-      const colors = ['#F97316', '#0EA5E9', '#10B981', '#FACC15', '#EC4899', '#8B5CF6'];
-      const particles = Array.from({ length: 55 }, () => ({
-        x: canvas.width / 2 + (Math.random() - 0.5) * 180,
-        y: canvas.height / 2,
-        vx: (Math.random() - 0.5) * 15,
-        vy: -Math.random() * 14 - 4,
-        size: Math.random() * 8 + 5,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        rot: Math.random() * Math.PI,
-        vRot: (Math.random() - 0.5) * 0.2
+      canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+      const colors = ['#F97316', '#0EA5E9', '#10B981', '#FACC15', '#EC4899'];
+      const particles = Array.from({ length: 45 }, () => ({
+        x: canvas.width / 2, y: canvas.height / 2,
+        vx: (Math.random() - 0.5) * 14, vy: -Math.random() * 13 - 4,
+        size: Math.random() * 8 + 5, color: colors[Math.floor(Math.random() * colors.length)]
       }));
-
       let frame = 0;
       function animate() {
-        frame++;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particles.forEach(p => {
-          p.x += p.vx;
-          p.y += p.vy;
-          p.vy += 0.42;
-          p.rot += p.vRot;
-          ctx.save();
-          ctx.translate(p.x, p.y);
-          ctx.rotate(p.rot);
-          ctx.fillStyle = p.color;
-          ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
-          ctx.restore();
-        });
-        if (frame < 70) requestAnimationFrame(animate);
-        else ctx.clearRect(0, 0, canvas.width, canvas.height);
+        frame++; ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => { p.x += p.vx; p.y += p.vy; p.vy += 0.42; ctx.fillStyle = p.color; ctx.fillRect(p.x, p.y, p.size, p.size); });
+        if (frame < 65) requestAnimationFrame(animate); else ctx.clearRect(0, 0, canvas.width, canvas.height);
       }
       requestAnimationFrame(animate);
     }
