@@ -33,7 +33,7 @@ window.QUESTION_BANK = {
     {
       id: "c3",
       cause:  { cantonese: "隻手同塊面污糟咗", written: "手和面弄髒了", img: "images/dirty_cause.jpg",  sceneKey: "dirty_cause" },
-      effect: { cantonese: "要洗手同抹面",     written: "要洗手和抹面", img: "images/dirty_effect.jpg", sceneKey: "dirty_effect" },
+      effect: { cantonese: "要洗手同洗面",     written: "要洗手和洗面", img: "images/dirty_effect.jpg", sceneKey: "dirty_effect" },
       distractors: [
         { cantonese: "喺草地踢波", written: "在草地踢球", img: "images/dist_soccer.jpg", sceneKey: "dist_soccer" },
         { cantonese: "蠟筆畫彩虹", written: "蠟筆畫彩虹", img: "images/dist_draw.jpg",   sceneKey: "dist_draw" }
@@ -60,7 +60,7 @@ window.QUESTION_BANK = {
     {
       id: "c6",
       cause:  { cantonese: "喺公園跌親擦損咗", written: "在公園跌倒擦傷了", img: "images/fall_cause.jpg",  sceneKey: "fall_cause" },
-      effect: { cantonese: "要貼靚靚膠布",     written: "要貼漂亮膠布",     img: "images/fall_effect.jpg", sceneKey: "fall_effect" },
+      effect: { cantonese: "要貼膠布",     written: "要貼膠布",     img: "images/fall_effect.jpg", sceneKey: "fall_effect" },
       distractors: [
         { cantonese: "對住鏡刷牙", written: "對著鏡刷牙", img: "images/dist_brush.jpg",  sceneKey: "dist_brush" },
         { cantonese: "地毯砌積木", written: "地毯砌積木", img: "images/dist_blocks.jpg", sceneKey: "dist_blocks" }
@@ -77,7 +77,7 @@ window.QUESTION_BANK = {
     },
     {
       id: "c8",
-      cause:  { cantonese: "乖乖幫手執好玩具", written: "乖乖幫忙收拾玩具", img: "images/tidy_cause.jpg",  sceneKey: "tidy_cause" },
+      cause:  { cantonese: "幫手執好玩具", written: "幫忙收拾玩具", img: "images/tidy_cause.jpg",  sceneKey: "tidy_cause" },
       effect: { cantonese: "老師讚賞派貼紙",   written: "老師讚賞派貼紙",   img: "images/tidy_effect.jpg", sceneKey: "tidy_effect" },
       distractors: [
         { cantonese: "對住鏡刷牙", written: "對著鏡刷牙", img: "images/dist_brush.jpg",  sceneKey: "dist_brush" },
