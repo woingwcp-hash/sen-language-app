@@ -24,11 +24,9 @@
       max-height: 100dvh;
       overflow: hidden;
       font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
-      /* 繽紛晴空與彩虹糖果漸層背景 */
       background: linear-gradient(145deg, #BAE6FD 0%, #E0E7FF 30%, #FCE7F3 68%, #FEF08A 100%);
     }
 
-    /* 背景漂浮雲朵與星星裝飾 */
     .bg-decor-cloud {
       position: fixed;
       pointer-events: none;
@@ -42,14 +40,12 @@
       100% { transform: translateY(-8px) translateX(6px); }
     }
 
-    /* 彩虹頂部裝飾條 */
     .rainbow-top-bar {
       height: 7px;
       width: 100%;
       background: linear-gradient(90deg, #FF5E7E 0%, #FF9F1C 20%, #FFCA3A 40%, #8AC926 60%, #1982C4 80%, #6A4C93 100%);
     }
 
-    /* 3D 糖果立體按鈕效果 */
     .tactile-btn {
       transition: transform 0.14s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.14s ease;
       box-shadow: 0 5px 0 rgba(15, 23, 42, 0.18), 0 8px 15px rgba(15, 23, 42, 0.08);
@@ -60,21 +56,17 @@
       box-shadow: 0 1px 0 rgba(15, 23, 42, 0.18);
     }
 
-    /* 主頁繽紛大卡片 */
     .pattern-menu-card {
       transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease;
       box-shadow: 0 10px 0 rgba(15, 23, 42, 0.12), 0 16px 32px rgba(15, 23, 42, 0.1);
       touch-action: manipulation;
     }
-    .pattern-menu-card:hover {
-      transform: translateY(-3px);
-    }
+    .pattern-menu-card:hover { transform: translateY(-3px); }
     .pattern-menu-card:active {
       transform: translateY(4px) scale(0.985);
       box-shadow: 0 3px 0 rgba(15, 23, 42, 0.12);
     }
 
-    /* 繪本圖卡立體陰影 */
     .storybook-card {
       transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease;
       box-shadow: 0 7px 0 rgba(217, 119, 6, 0.22), 0 10px 20px rgba(15, 23, 42, 0.09);
@@ -82,13 +74,11 @@
     }
     .storybook-card:active { transform: scale(0.97); }
 
-    /* 糖果色步驟標籤漸層 */
     .badge-step-1 { background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%); border-color: #FECACA; }
     .badge-step-2 { background: linear-gradient(135deg, #00B4DB 0%, #0083B0 100%); border-color: #BAE6FD; }
     .badge-step-3 { background: linear-gradient(135deg, #9D50BB 0%, #6E48AA 100%); border-color: #E9D5FF; }
     .badge-step-4 { background: linear-gradient(135deg, #11998E 0%, #38EF7D 100%); border-color: #A7F3D0; }
 
-    /* 固定圖片框為 4:3 橫向圖卡比例，完美貼合相片 */
     .img-fit-box {
       position: relative;
       width: 100%;
@@ -147,6 +137,42 @@
       100% { transform: scale(1); opacity: 1; }
     }
     .animate-pop { animation: pop-in 0.22s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+
+    /* 🎁 扭蛋機搖晃動畫 */
+    @keyframes gacha-wiggle {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      20% { transform: rotate(-12deg) scale(1.08); }
+      40% { transform: rotate(12deg) scale(1.1); }
+      60% { transform: rotate(-10deg) scale(1.08); }
+      80% { transform: rotate(10deg) scale(1.05); }
+    }
+    .gacha-shaking { animation: gacha-wiggle 0.65s ease-in-out infinite; }
+
+    /* 🎈 氣球漂浮與篤爆動畫 */
+    @keyframes balloon-float-up {
+      0% { transform: translateY(110dvh) rotate(-4deg); opacity: 1; }
+      50% { transform: translateY(45dvh) rotate(5deg); opacity: 1; }
+      100% { transform: translateY(-25dvh) rotate(-4deg); opacity: 0.95; }
+    }
+    .balloon-item {
+      position: absolute;
+      bottom: 0;
+      cursor: pointer;
+      touch-action: manipulation;
+      user-select: none;
+      animation: balloon-float-up linear forwards;
+      filter: drop-shadow(0 10px 14px rgba(15, 23, 42, 0.22));
+    }
+    @keyframes balloon-burst {
+      0% { transform: scale(1); opacity: 1; }
+      40% { transform: scale(1.45); opacity: 0.9; }
+      100% { transform: scale(0.2); opacity: 0; }
+    }
+    .balloon-popped {
+      animation: balloon-burst 0.24s ease-out forwards !important;
+      pointer-events: none;
+    }
+
     .thin-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
     .thin-scroll::-webkit-scrollbar-track { background: transparent; }
     .thin-scroll::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.45); border-radius: 9999px; }
@@ -154,10 +180,8 @@
 </head>
 <body class="w-full h-full flex flex-col justify-between overflow-hidden select-none relative">
 
-  <!-- 頂部七彩彩虹條 -->
   <div class="rainbow-top-bar shrink-0 z-30"></div>
 
-  <!-- 柔和可愛背景雲朵與彩虹裝飾 (不影響操作) -->
   <div class="bg-decor-cloud top-10 left-6 text-5xl sm:text-6xl">☁️</div>
   <div class="bg-decor-cloud top-14 right-10 text-4xl sm:text-5xl" style="animation-delay: -3s;">🌈</div>
   <div class="bg-decor-cloud bottom-8 left-12 text-4xl sm:text-5xl" style="animation-delay: -5s;">🎈</div>
@@ -166,21 +190,33 @@
   <canvas id="confettiCanvas" class="fixed inset-0 pointer-events-none z-50"></canvas>
   <div id="touchDragGhost" class="fixed pointer-events-none z-50 hidden" style="width: 190px; transform: translate(-50%, -50%) rotate(2deg);"></div>
 
-  <!-- VIEW 1: 🏠 句式練習主頁 -->
+  <!-- ===================================================================
+       VIEW 1: 🏠 句式練習主頁
+       =================================================================== -->
   <div id="homeScreen" class="w-full flex-1 min-h-0 flex flex-col justify-between px-3.5 sm:px-8 py-2.5 sm:py-4 max-w-6xl mx-auto overflow-hidden z-10">
     <header class="shrink-0 flex items-center justify-between gap-2 pb-1">
       <div class="flex items-center gap-2.5 sm:gap-3.5">
-        <div class="w-12 h-12 sm:w-15 sm:h-15 rounded-2xl bg-gradient-to-br from-pink-500 via-amber-400 to-yellow-300 border-3 border-white shadow-lg flex items-center justify-center text-2xl sm:text-3xl">🌈</div>
+        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-pink-500 via-amber-400 to-yellow-300 border-3 border-white shadow-lg flex items-center justify-center text-2xl sm:text-3xl">🌈</div>
         <div>
           <h1 class="text-xl sm:text-3xl font-black text-slate-800 tracking-tight drop-shadow-sm">句式練習百寶箱</h1>
-          <p class="text-xs sm:text-sm font-black text-pink-600">✨ 撳一下彩色大圖卡開始闖關啦！</p>
+          <p class="text-xs sm:text-sm font-black text-pink-600">✨ 儲星星扭貼紙・玩住學講完整句子！</p>
         </div>
       </div>
+
       <div class="flex items-center gap-2 sm:gap-3">
-        <div class="bg-gradient-to-r from-amber-300 to-yellow-200 border-3 border-white rounded-full px-4 sm:px-5 py-1.5 flex items-center gap-1.5 shadow-md">
+        <!-- 🎁 星星扭蛋貼紙簿入口按鈕 -->
+        <button onclick="openStickerModal()" class="tactile-btn bg-gradient-to-r from-pink-500 via-fuchsia-500 to-purple-500 hover:from-pink-400 hover:to-purple-400 text-white border-3 border-white rounded-full px-3.5 sm:px-5 py-1.5 flex items-center gap-1.5 shadow-md">
+          <span class="text-lg sm:text-2xl animate-bounce">🎁</span>
+          <span class="text-xs sm:text-base font-black">扭蛋貼紙簿</span>
+          <span id="homeStickerBadge" class="bg-white/25 px-2 py-0.5 rounded-full text-[11px] sm:text-xs font-black">0/16</span>
+        </button>
+
+        <!-- ⭐ 星星代幣顯示 -->
+        <button onclick="openStickerModal()" class="tactile-btn bg-gradient-to-r from-amber-300 to-yellow-200 border-3 border-white rounded-full px-3.5 sm:px-5 py-1.5 flex items-center gap-1.5 shadow-md">
           <span class="text-lg sm:text-2xl">⭐</span>
           <span id="homeStarCount" class="text-base sm:text-xl font-black text-amber-950">0</span>
-        </div>
+        </button>
+
         <button onclick="openTeacherModal()" aria-label="設定" class="tactile-btn w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-gradient-to-b from-purple-500 to-indigo-600 text-white border-3 border-white flex items-center justify-center text-xl">⚙️</button>
       </div>
     </header>
@@ -192,57 +228,148 @@
     <footer class="shrink-0 pt-1 text-center">
       <div class="inline-flex items-center gap-2 bg-white/95 border-3 border-pink-300 px-5 py-1.5 rounded-full text-xs sm:text-sm font-black text-pink-700 shadow-md">
         <span>🎈</span>
-        <span>請選擇「因為…所以…」或者「首先…跟住…然後…最後…」開始練習！</span>
+        <span>每答啱 1 題送 1 粒 ⭐，儲夠 2 粒星可以去「🎁 扭蛋貼紙簿」抽獎！</span>
       </div>
     </footer>
   </div>
 
-  <!-- VIEW 2: 🎯 句式互動訓練畫面 -->
+  <!-- ===================================================================
+       VIEW 2: 🎯 句式互動訓練畫面
+       =================================================================== -->
   <div id="trainingScreen" class="hidden w-full flex-1 min-h-0 flex flex-col justify-between overflow-hidden z-10">
-    <!-- 繽紛糖果色頂部導航欄 -->
     <header class="shrink-0 px-2.5 sm:px-6 pt-2 pb-1 flex items-center justify-between z-20 max-w-6xl w-full mx-auto gap-1.5">
       <div class="flex items-center gap-1.5 sm:gap-2">
         <button onclick="goToHomeScreen()" class="tactile-btn bg-gradient-to-b from-rose-400 to-pink-500 hover:from-rose-300 hover:to-pink-400 text-white border-2 border-white px-3 sm:px-4 h-10 sm:h-11 rounded-full flex items-center gap-1 font-black text-xs sm:text-base">
           <span class="text-base sm:text-lg">🏠</span><span class="hidden sm:inline">主頁</span>
         </button>
-        <button id="activePatternBadgeBtn" onclick="switchActivePatternQuick()" class="tactile-btn bg-gradient-to-r from-violet-500 to-fuchsia-500 hover:from-violet-400 hover:to-fuchsia-400 text-white border-2 border-white px-3 sm:px-4 h-10 sm:h-11 rounded-full flex items-center gap-1.5 font-black text-xs sm:text-sm">
+        <button id="activePatternBadgeBtn" onclick="switchActivePatternQuick()" class="tactile-btn bg-gradient-to-r from-violet-500 to-fuchsia-500 hover:from-violet-400 hover:to-fuchsia-400 text-white border-2 border-white px-2.5 sm:px-4 h-10 sm:h-11 rounded-full flex items-center gap-1 font-black text-xs sm:text-sm">
           <span id="activePatternBadgeText">因為…所以…</span><span class="text-xs bg-white/25 px-1.5 py-0.5 rounded-full">🔄</span>
         </button>
-        <button onclick="prevQuestion()" class="tactile-btn w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-gradient-to-b from-sky-400 to-blue-500 text-white border-2 border-white flex items-center justify-center font-black text-sm sm:text-lg">◀</button>
-        <div class="bg-gradient-to-r from-amber-300 to-yellow-200 border-3 border-white rounded-full px-3 sm:px-4 py-1 flex items-center gap-1 shadow-md">
-          <span class="text-sm sm:text-lg">⭐</span>
-          <span id="progressText" class="text-xs sm:text-lg font-black text-amber-950">1 / 8</span>
+        <button onclick="prevQuestion()" class="tactile-btn w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-to-b from-sky-400 to-blue-500 text-white border-2 border-white flex items-center justify-center font-black text-sm sm:text-base">◀</button>
+        <div class="bg-white/95 border-2 border-amber-300 rounded-full px-2.5 sm:px-3.5 py-1 flex items-center gap-1 shadow-sm">
+          <span class="text-xs sm:text-base font-black text-slate-700" id="progressText">1 / 8</span>
         </div>
-        <button onclick="nextQuestion()" class="tactile-btn w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-gradient-to-b from-sky-400 to-blue-500 text-white border-2 border-white flex items-center justify-center font-black text-sm sm:text-lg">▶</button>
+        <button onclick="nextQuestion()" class="tactile-btn w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-to-b from-sky-400 to-blue-500 text-white border-2 border-white flex items-center justify-center font-black text-sm sm:text-base">▶</button>
       </div>
 
       <div class="flex items-center gap-1.5 sm:gap-2">
-        <button onclick="speakCurrentSentence(true)" class="tactile-btn bg-gradient-to-b from-amber-300 via-amber-400 to-orange-400 hover:from-amber-200 hover:to-orange-300 text-slate-900 border-2 border-white px-3.5 sm:px-5 h-10 sm:h-11 rounded-full font-black text-xs sm:text-lg flex items-center gap-1 sm:gap-1.5">
+        <!-- 訓練畫面頂部：點擊直接打開扭蛋貼紙簿 -->
+        <button onclick="openStickerModal()" class="tactile-btn bg-gradient-to-r from-amber-300 to-yellow-200 border-2 border-white px-3 sm:px-4 h-10 sm:h-11 rounded-full font-black text-xs sm:text-base text-amber-950 flex items-center gap-1 shadow">
+          <span>🎁</span>
+          <span>⭐</span>
+          <span id="trainStarCount">0</span>
+        </button>
+
+        <button onclick="speakCurrentSentence(true)" class="tactile-btn bg-gradient-to-b from-amber-300 via-amber-400 to-orange-400 hover:from-amber-200 hover:to-orange-300 text-slate-900 border-2 border-white px-3 sm:px-5 h-10 sm:h-11 rounded-full font-black text-xs sm:text-lg flex items-center gap-1 sm:gap-1.5">
           <span class="text-base sm:text-xl">🔊</span><span>讀句子</span>
         </button>
+
         <button onclick="openTeacherModal()" class="tactile-btn w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-gradient-to-b from-purple-500 to-indigo-600 text-white border-2 border-white flex items-center justify-center text-base sm:text-lg">⚙️</button>
       </div>
     </header>
 
     <main class="flex-1 min-h-0 px-2.5 sm:px-6 pb-2.5 sm:pb-4 pt-1 flex flex-col justify-evenly gap-1.5 sm:gap-2.5 max-w-6xl w-full mx-auto overflow-hidden">
-      <!-- 上半部：句式擺放區 (粉紅糖果立體邊框) -->
+      <!-- 上半部：句式擺放區 -->
       <section class="w-full bg-white/95 rounded-[1.6rem] sm:rounded-[2rem] p-2.5 sm:p-3.5 border-4 border-pink-400 shadow-[0_8px_0_rgba(244,114,182,0.28)] flex flex-col justify-center relative">
         <div id="topSlotsContainer" class="w-full"></div>
       </section>
 
-      <!-- 中間獨立控制列：擺喺兩個大框中間，絕對唔會遮住上面任何圖卡或文字！ -->
+      <!-- 中間獨立控制列：永不遮擋圖卡 -->
       <div id="actionOverlayBar" class="hidden shrink-0 flex justify-center z-30 py-0.5">
-        <div id="actionOverlayContent" class="flex items-center gap-3"></div>
+        <div id="actionOverlayContent" class="flex flex-wrap items-center justify-center gap-2.5"></div>
       </div>
 
-      <!-- 下半部：圖卡選擇區 (晴空藍糖果立體邊框) -->
+      <!-- 下半部：圖卡選擇區 -->
       <section class="w-full bg-white/95 rounded-[1.6rem] sm:rounded-[2rem] p-2.5 sm:p-3.5 border-4 border-sky-400 shadow-[0_8px_0_rgba(56,189,248,0.28)] flex flex-col justify-center">
         <div id="cardTray" class="w-full"></div>
       </section>
     </main>
   </div>
 
-  <!-- VIEW 3: 🔍 兩指縮放觀察圖卡視窗 -->
+  <!-- ===================================================================
+       VIEW 3: 🎁 星星扭蛋機 ＆ 貼紙收集冊 (Gachapon & Sticker Book Modal)
+       =================================================================== -->
+  <div id="stickerModal" onclick="if(event.target === this) closeStickerModal()" class="fixed inset-0 bg-indigo-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-5 select-none">
+    <div class="bg-gradient-to-b from-white via-pink-50/50 to-amber-50/70 rounded-[2.2rem] max-w-3xl w-full max-h-[92dvh] overflow-y-auto thin-scroll border-4 border-pink-400 shadow-2xl p-4 sm:p-6 space-y-4 animate-pop">
+      
+      <!-- 頂部標題與星星餘額 -->
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b-2 border-pink-200 pb-3">
+        <div class="flex items-center gap-2.5">
+          <span class="text-3xl sm:text-4xl">🎁</span>
+          <div>
+            <h2 class="text-lg sm:text-2xl font-black text-slate-800">神奇扭蛋機 ＆ 貼紙收集冊</h2>
+            <p class="text-xs sm:text-sm font-bold text-pink-600">每儲夠 2 粒 ⭐ 就可以扭一次蛋，收集可愛貼紙！（點擊貼紙會發聲）</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <div class="bg-gradient-to-r from-amber-300 to-yellow-200 border-3 border-white rounded-full px-4 py-1 flex items-center gap-1.5 shadow">
+            <span class="text-xl">⭐</span>
+            <span id="gachaStarCount" class="text-lg sm:text-xl font-black text-amber-950">0</span>
+          </div>
+          <button onclick="closeStickerModal()" class="tactile-btn w-10 h-10 rounded-full bg-rose-500 text-white border-2 border-white font-black text-lg flex items-center justify-center">✕</button>
+        </div>
+      </div>
+
+      <!-- 扭蛋機互動區 -->
+      <div class="bg-gradient-to-r from-fuchsia-100 via-pink-100 to-amber-100 rounded-3xl p-4 border-3 border-pink-300 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-inner">
+        <div class="flex items-center gap-4">
+          <div id="gachaMachineIcon" class="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-white border-4 border-pink-400 shadow-lg flex items-center justify-center text-5xl sm:text-6xl shrink-0">
+            🎰
+          </div>
+          <div>
+            <div id="gachaStatusTitle" class="text-base sm:text-xl font-black text-slate-800">準備好未？一齊扭出驚喜貼紙！</div>
+            <div id="gachaStatusSub" class="text-xs sm:text-sm font-bold text-slate-600 mt-0.5">每次扭蛋需要 2 粒星星 ⭐</div>
+          </div>
+        </div>
+
+        <button id="pullGachaBtn" onclick="pullGachaMachine()" class="tactile-btn shrink-0 bg-gradient-to-r from-pink-500 via-rose-500 to-orange-400 hover:from-pink-400 hover:to-orange-300 text-white border-3 border-white px-6 py-3 rounded-full font-black text-base sm:text-lg shadow-xl flex items-center gap-2">
+          <span>✨ 扭一次蛋</span>
+          <span class="bg-black/20 px-2.5 py-0.5 rounded-full text-xs sm:text-sm">-2 ⭐</span>
+        </button>
+      </div>
+
+      <!-- 16 格貼紙收集冊 -->
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-sm sm:text-base font-black text-slate-700">📖 我的貼紙簿（點擊已收集嘅貼紙聽讀音）：</span>
+          <span id="stickerProgressText" class="text-xs sm:text-sm font-black bg-pink-100 text-pink-800 px-3 py-0.5 rounded-full border border-pink-300">已收集 0 / 16</span>
+        </div>
+        <div id="stickerBookGrid" class="grid grid-cols-4 sm:grid-cols-8 gap-2.5">
+          <!-- 由 renderStickerBook() 動態生成 -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===================================================================
+       VIEW 4: 🎈 過關篤氣球感官獎勵小遊戲 (Balloon Pop Reward Overlay)
+       =================================================================== -->
+  <div id="balloonGameOverlay" class="fixed inset-0 bg-sky-900/45 backdrop-blur-[2px] z-50 hidden overflow-hidden select-none">
+    <!-- 頂部計分與倒數列 -->
+    <div class="absolute top-4 inset-x-0 flex justify-center z-20 px-4 pointer-events-none">
+      <div class="pointer-events-auto bg-white/95 border-4 border-pink-400 rounded-full px-5 py-2 shadow-2xl flex items-center gap-4 animate-pop">
+        <div class="flex items-center gap-1.5">
+          <span class="text-2xl animate-bounce">🎈</span>
+          <span class="text-sm sm:text-lg font-black text-pink-600">快啲用手指篤爆氣球！</span>
+        </div>
+        <div class="bg-amber-100 border-2 border-amber-300 px-3 py-0.5 rounded-full text-xs sm:text-base font-black text-amber-900">
+          已篤爆：<span id="balloonPoppedScore">0</span> 個
+        </div>
+        <button onclick="stopBalloonGame(true)" class="tactile-btn bg-emerald-500 hover:bg-emerald-400 text-white px-4 py-1 rounded-full font-black text-xs sm:text-sm">
+          完成 ➡️
+        </button>
+      </div>
+    </div>
+
+    <!-- 氣球漂浮容器 -->
+    <div id="balloonStage" class="w-full h-full relative overflow-hidden"></div>
+  </div>
+
+  <!-- ===================================================================
+       VIEW 5: 🔍 兩指縮放觀察圖卡視窗
+       =================================================================== -->
   <div id="zoomModal" onclick="if(event.target === this) closeZoomModal()" class="fixed inset-0 bg-indigo-950/85 backdrop-blur-md z-50 hidden flex flex-col items-center justify-between p-3 sm:p-6 select-none">
     <div class="w-full max-w-4xl flex items-center justify-between gap-2 z-20">
       <div class="bg-white border-3 border-pink-400 px-4 py-1.5 rounded-full flex items-center gap-2 shadow-lg">
@@ -269,7 +396,9 @@
     </div>
   </div>
 
-  <!-- VIEW 4: ⚙️ 老師／家長設定面板 -->
+  <!-- ===================================================================
+       VIEW 6: ⚙️ 老師／家長設定面板
+       =================================================================== -->
   <div id="teacherModal" onclick="if(event.target === this) closeTeacherModal()" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-5">
     <div class="bg-white rounded-[2rem] max-w-xl w-full max-h-[90dvh] overflow-y-auto thin-scroll border-4 border-purple-400 shadow-2xl p-4 sm:p-6 space-y-4 animate-pop">
       <div class="flex items-center justify-between border-b-2 border-purple-100 pb-3">
@@ -277,10 +406,23 @@
           <span class="text-2xl">⚙️</span>
           <div>
             <h2 class="text-lg sm:text-xl font-black text-slate-800">家長／老師設定面板</h2>
-            <p class="text-xs font-bold text-slate-500">切換句式、難度及語音（已獲 ⭐ <span id="teacherStarCount">0</span> 粒星）</p>
+            <p class="text-xs font-bold text-slate-500">切換句式、難度及管理星星獎勵（目前有 ⭐ <span id="teacherStarCount">0</span> 粒星）</p>
           </div>
         </div>
         <button onclick="closeTeacherModal()" class="w-10 h-10 rounded-full bg-rose-100 hover:bg-rose-200 text-rose-700 font-black text-lg flex items-center justify-center">✕</button>
+      </div>
+
+      <!-- 老師快速獎勵工具 -->
+      <div class="bg-gradient-to-r from-amber-50 to-pink-50 p-3.5 rounded-2xl border-2 border-amber-300 flex flex-wrap items-center justify-between gap-2">
+        <div class="text-xs sm:text-sm font-black text-amber-950">🎁 課堂表現獎勵工具：</div>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="teacherBonusStars(5)" class="tactile-btn bg-amber-400 hover:bg-amber-300 text-slate-900 border-2 border-white px-3 py-1.5 rounded-xl font-black text-xs">
+            ⭐ 加 5 粒星
+          </button>
+          <button type="button" onclick="closeTeacherModal(); startBalloonRewardGame();" class="tactile-btn bg-pink-500 hover:bg-pink-400 text-white border-2 border-white px-3 py-1.5 rounded-xl font-black text-xs">
+            🎈 即玩篤氣球
+          </button>
+        </div>
       </div>
 
       <div class="bg-amber-50 p-3.5 rounded-2xl border-2 border-amber-300 space-y-2">
@@ -335,7 +477,7 @@
 
   <script>
     /********************************************************************
-     * 1. 智能圖片讀取引擎 (支援 🔍 放大鏡按鈕與兩指直接張開放大)
+     * 1. 智能圖片讀取引擎
      ********************************************************************/
     function buildImgPath(rawPath) {
       const ver = window.IMAGE_VERSION || 1;
@@ -390,20 +532,254 @@
     }
 
     /********************************************************************
-     * 2. 🔍 兩指縮放 (Pinch-to-Zoom) 及 單指平移觀察器
+     * 2. 🎁 16 款可愛貼紙資料庫 ＆ 扭蛋機邏輯
+     ********************************************************************/
+    const STICKER_COLLECTION = [
+      { id: 'st1',  emoji: '🦖', name: '霸王龍',   bg: 'from-emerald-100 to-green-200 border-emerald-400' },
+      { id: 'st2',  emoji: '🦄', name: '彩虹獨角獸', bg: 'from-pink-100 to-fuchsia-200 border-pink-400' },
+      { id: 'st3',  emoji: '🚀', name: '太空火箭', bg: 'from-sky-100 to-indigo-200 border-sky-400' },
+      { id: 'st4',  emoji: '🦁', name: '勇敢獅子王', bg: 'from-amber-100 to-orange-200 border-amber-400' },
+      { id: 'st5',  emoji: '🐬', name: '聰明小海豚', bg: 'from-cyan-100 to-blue-200 border-cyan-400' },
+      { id: 'st6',  emoji: '🚒', name: '紅色消防車', bg: 'from-rose-100 to-red-200 border-rose-400' },
+      { id: 'st7',  emoji: '🐼', name: '可愛大熊貓', bg: 'from-lime-100 to-emerald-200 border-lime-400' },
+      { id: 'st8',  emoji: '👑', name: '閃亮小皇冠', bg: 'from-yellow-100 to-amber-200 border-yellow-400' },
+      { id: 'st9',  emoji: '🦋', name: '七彩小蝴蝶', bg: 'from-purple-100 to-violet-200 border-purple-400' },
+      { id: 'st10', emoji: '🍦', name: '草莓甜筒', bg: 'from-pink-100 to-rose-200 border-pink-400' },
+      { id: 'st11', emoji: '🚓', name: '閃燈警察車', bg: 'from-blue-100 to-indigo-200 border-blue-400' },
+      { id: 'st12', emoji: '🐶', name: '開心小狗狗', bg: 'from-orange-100 to-amber-200 border-orange-400' },
+      { id: 'st13', emoji: '🐱', name: '乖巧小貓咪', bg: 'from-rose-100 to-pink-200 border-rose-400' },
+      { id: 'st14', emoji: '🚂', name: '蒸汽小火車', bg: 'from-teal-100 to-emerald-200 border-teal-400' },
+      { id: 'st15', emoji: '🎡', name: '樂園摩天輪', bg: 'from-fuchsia-100 to-purple-200 border-fuchsia-400' },
+      { id: 'st16', emoji: '🏆', name: '超級大獎盃', bg: 'from-yellow-200 to-amber-300 border-amber-500' }
+    ];
+
+    let unlockedStickers = new Set();
+    let isRollingGacha = false;
+
+    function openStickerModal() {
+      playSound('pop');
+      renderStickerBook();
+      document.getElementById('stickerModal').classList.remove('hidden');
+    }
+
+    function closeStickerModal() {
+      playSound('return');
+      document.getElementById('stickerModal').classList.add('hidden');
+    }
+
+    function renderStickerBook() {
+      const starEl = document.getElementById('gachaStarCount');
+      if (starEl) starEl.textContent = starCount;
+
+      const progEl = document.getElementById('stickerProgressText');
+      if (progEl) progEl.textContent = `已收集 ${unlockedStickers.size} / ${STICKER_COLLECTION.length}`;
+
+      const homeBadge = document.getElementById('homeStickerBadge');
+      if (homeBadge) homeBadge.textContent = `${unlockedStickers.size}/${STICKER_COLLECTION.length}`;
+
+      const pullBtn = document.getElementById('pullGachaBtn');
+      if (pullBtn) {
+        if (unlockedStickers.size >= STICKER_COLLECTION.length) {
+          pullBtn.innerHTML = `<span>🏆 已集齊全套貼紙！</span>`;
+          pullBtn.disabled = true;
+          pullBtn.className = 'tactile-btn shrink-0 bg-emerald-500 text-white border-3 border-white px-6 py-3 rounded-full font-black text-base shadow-xl';
+        } else if (starCount < 2) {
+          pullBtn.innerHTML = `<span>再儲多 ${2 - starCount} 粒 ⭐ 就扭得！</span>`;
+          pullBtn.className = 'tactile-btn shrink-0 bg-slate-300 text-slate-600 border-3 border-white px-5 py-3 rounded-full font-black text-sm sm:text-base';
+        } else {
+          pullBtn.disabled = false;
+          pullBtn.innerHTML = `<span>✨ 扭一次蛋</span><span class="bg-black/20 px-2.5 py-0.5 rounded-full text-xs sm:text-sm">-2 ⭐</span>`;
+          pullBtn.className = 'tactile-btn shrink-0 bg-gradient-to-r from-pink-500 via-rose-500 to-orange-400 hover:from-pink-400 hover:to-orange-300 text-white border-3 border-white px-6 py-3 rounded-full font-black text-base sm:text-lg shadow-xl flex items-center gap-2 animate-bounce';
+        }
+      }
+
+      const grid = document.getElementById('stickerBookGrid');
+      if (!grid) return;
+      grid.innerHTML = STICKER_COLLECTION.map(st => {
+        const isUnlocked = unlockedStickers.has(st.id);
+        if (isUnlocked) {
+          return `
+            <button type="button" onclick="playSound('pop'); speakText('${st.name}貼紙！')"
+                    class="tactile-btn rounded-2xl p-2 bg-gradient-to-b ${st.bg} border-3 flex flex-col items-center justify-center gap-1 aspect-square animate-pop">
+              <span class="text-3xl sm:text-4xl drop-shadow">${st.emoji}</span>
+              <span class="text-[10px] sm:text-xs font-black text-slate-800 truncate w-full text-center">${st.name}</span>
+            </button>
+          `;
+        } else {
+          return `
+            <div class="rounded-2xl p-2 bg-slate-100/90 border-2 border-dashed border-slate-300 flex flex-col items-center justify-center gap-1 aspect-square opacity-65">
+              <span class="text-2xl sm:text-3xl text-slate-300">❓</span>
+              <span class="text-[10px] font-bold text-slate-400">未解鎖</span>
+            </div>
+          `;
+        }
+      }).join('');
+    }
+
+    function pullGachaMachine() {
+      if (isRollingGacha) return;
+      if (starCount < 2) {
+        playSound('gentleHint');
+        speakText('星星未夠喎，快啲去答問題儲夠兩粒星先啦！');
+        return;
+      }
+
+      const lockedList = STICKER_COLLECTION.filter(s => !unlockedStickers.has(s.id));
+      if (lockedList.length === 0) {
+        speakText('你好叻呀！已經集齊晒全部貼紙喇！');
+        return;
+      }
+
+      isRollingGacha = true;
+      starCount -= 2;
+      localStorage.setItem('sen_causal_stars', String(starCount));
+      updateProgressTopBar();
+
+      const machineIcon = document.getElementById('gachaMachineIcon');
+      const titleEl = document.getElementById('gachaStatusTitle');
+      const subEl = document.getElementById('gachaStatusSub');
+
+      machineIcon.textContent = '🎰';
+      machineIcon.classList.add('gacha-shaking');
+      titleEl.textContent = '咕嚕咕嚕… 扭蛋機轉緊喇！';
+      subEl.textContent = '估下會跌出咩貼紙呢？';
+      playSound('pop');
+
+      setTimeout(() => {
+        machineIcon.classList.remove('gacha-shaking');
+        const prize = lockedList[Math.floor(Math.random() * lockedList.length)];
+        unlockedStickers.add(prize.id);
+        try {
+          localStorage.setItem('sen_unlocked_stickers_v1', JSON.stringify([...unlockedStickers]));
+        } catch (e) {}
+
+        machineIcon.textContent = prize.emoji;
+        titleEl.textContent = `🎉 恭喜抽到：【${prize.name}】貼紙！`;
+        subEl.textContent = '已經自動貼入你嘅貼紙簿入面喇！';
+
+        playSound('success');
+        launchConfetti();
+        speakText(`太棒了！你抽到，${prize.name}貼紙！`);
+        isRollingGacha = false;
+        renderStickerBook();
+      }, 900);
+    }
+
+    function teacherBonusStars(amount) {
+      playSound('success');
+      starCount += amount;
+      localStorage.setItem('sen_causal_stars', String(starCount));
+      updateProgressTopBar();
+      renderStickerBook();
+      speakText(`老師獎勵你 ${amount} 粒星星！`);
+    }
+
+    /********************************************************************
+     * 3. 🎈 過關篤氣球感官獎勵小遊戲 (Balloon Pop Mini-Game)
+     ********************************************************************/
+    let balloonTimer = null;
+    let balloonSpawnInterval = null;
+    let poppedCount = 0;
+
+    function startBalloonRewardGame() {
+      playSound('pop');
+      poppedCount = 0;
+      const scoreEl = document.getElementById('balloonPoppedScore');
+      if (scoreEl) scoreEl.textContent = '0';
+
+      const overlay = document.getElementById('balloonGameOverlay');
+      const stage = document.getElementById('balloonStage');
+      stage.innerHTML = '';
+      overlay.classList.remove('hidden');
+
+      speakText('獎勵時間！快啲用手指篤爆啲氣球啦！');
+
+      // 先即刻放出 5 個氣球，再每 420ms 持續飄出新氣球
+      for (let i = 0; i < 5; i++) {
+        setTimeout(spawnSingleBalloon, i * 180);
+      }
+      balloonSpawnInterval = setInterval(spawnSingleBalloon, 420);
+
+      // 7 秒後自動結束氣球時間
+      if (balloonTimer) clearTimeout(balloonTimer);
+      balloonTimer = setTimeout(() => {
+        stopBalloonGame(false);
+      }, 7200);
+    }
+
+    function spawnSingleBalloon() {
+      const stage = document.getElementById('balloonStage');
+      if (!stage) return;
+
+      const balloonTypes = [
+        { emoji: '🎈', bg: 'radial-gradient(circle at 32% 30%, #FF9EBB, #FF3366)', bonus: false },
+        { emoji: '🎈', bg: 'radial-gradient(circle at 32% 30%, #93E5FF, #0099FF)', bonus: false },
+        { emoji: '🎈', bg: 'radial-gradient(circle at 32% 30%, #FFF275, #FF9900)', bonus: false },
+        { emoji: '🎈', bg: 'radial-gradient(circle at 32% 30%, #A8FF9E, #16C60C)', bonus: false },
+        { emoji: '🎈', bg: 'radial-gradient(circle at 32% 30%, #E2A8FF, #9933FF)', bonus: false },
+        { emoji: '⭐', bg: 'radial-gradient(circle at 32% 30%, #FFF7AE, #F59E0B)', bonus: true }
+      ];
+
+      const cfg = balloonTypes[Math.floor(Math.random() * balloonTypes.length)];
+      const el = document.createElement('div');
+      const size = Math.floor(Math.random() * 26) + 76; // 76px ~ 102px 大氣球，幼兒極易篤中
+      const leftPct = Math.floor(Math.random() * 82) + 5;
+      const duration = (Math.random() * 1.8 + 3.4).toFixed(2);
+
+      el.className = 'balloon-item flex items-center justify-center rounded-full border-3 border-white/80 shadow-xl';
+      el.style.width = `${size}px`;
+      el.style.height = `${Math.round(size * 1.14)}px`;
+      el.style.left = `${leftPct}%`;
+      el.style.background = cfg.bg;
+      el.style.animationDuration = `${duration}s`;
+
+      el.innerHTML = `
+        <span class="text-3xl sm:text-4xl pointer-events-none select-none">${cfg.bonus ? '🌟' : '✨'}</span>
+        <div class="w-1 h-6 bg-white/70 absolute -bottom-6 left-1/2 -translate-x-1/2 pointer-events-none"></div>
+      `;
+
+      el.onpointerdown = (e) => {
+        e.stopPropagation();
+        if (el.classList.contains('balloon-popped')) return;
+        el.classList.add('balloon-popped');
+        poppedCount++;
+        const scoreEl = document.getElementById('balloonPoppedScore');
+        if (scoreEl) scoreEl.textContent = String(poppedCount);
+
+        if (cfg.bonus) {
+          starCount++;
+          localStorage.setItem('sen_causal_stars', String(starCount));
+          updateProgressTopBar();
+          playSound('success');
+          el.innerHTML = `<span class="text-2xl font-black text-amber-300 drop-shadow">+1⭐</span>`;
+        } else {
+          playSound('pop');
+          el.innerHTML = `<span class="text-4xl">💥</span>`;
+        }
+        setTimeout(() => el.remove(), 240);
+      };
+
+      stage.appendChild(el);
+      setTimeout(() => { if (el.parentNode) el.remove(); }, parseFloat(duration) * 1000);
+    }
+
+    function stopBalloonGame(goNextImmediately = false) {
+      if (balloonTimer) clearTimeout(balloonTimer);
+      if (balloonSpawnInterval) clearInterval(balloonSpawnInterval);
+      const overlay = document.getElementById('balloonGameOverlay');
+      if (overlay) overlay.classList.add('hidden');
+      playSound('place');
+      if (goNextImmediately && isCurrentQuestionSolved) {
+        nextQuestion();
+      }
+    }
+
+    /********************************************************************
+     * 4. 🔍 兩指縮放 (Pinch-to-Zoom) 及 單指平移觀察器
      ********************************************************************/
     let zoomState = {
-      isOpen: false,
-      scale: 1,
-      tx: 0,
-      ty: 0,
-      startDist: 0,
-      startScale: 1,
-      isPanning: false,
-      panStartX: 0,
-      panStartY: 0,
-      startTx: 0,
-      startTy: 0
+      isOpen: false, scale: 1, tx: 0, ty: 0, startDist: 0, startScale: 1,
+      isPanning: false, panStartX: 0, panStartY: 0, startTx: 0, startTy: 0
     };
 
     function findCardById(cardId) {
@@ -450,19 +826,13 @@
 
     function applyZoomTransform() {
       const wrap = document.getElementById('zoomVisualWrap');
-      if (wrap) {
-        wrap.style.transform = `translate(${zoomState.tx}px, ${zoomState.ty}px) scale(${zoomState.scale})`;
-      }
+      if (wrap) wrap.style.transform = `translate(${zoomState.tx}px, ${zoomState.ty}px) scale(${zoomState.scale})`;
       const badge = document.getElementById('zoomLevelBadge');
-      if (badge) {
-        badge.textContent = `${Math.round(zoomState.scale * 100)}%`;
-      }
+      if (badge) badge.textContent = `${Math.round(zoomState.scale * 100)}%`;
     }
 
     function resetZoomTransform() {
-      zoomState.scale = 1;
-      zoomState.tx = 0;
-      zoomState.ty = 0;
+      zoomState.scale = 1; zoomState.tx = 0; zoomState.ty = 0;
       applyZoomTransform();
     }
 
@@ -495,10 +865,7 @@
         if (e.touches.length === 2) {
           e.preventDefault();
           zoomState.isPanning = false;
-          zoomState.startDist = Math.hypot(
-            e.touches[0].clientX - e.touches[1].clientX,
-            e.touches[0].clientY - e.touches[1].clientY
-          );
+          zoomState.startDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
           zoomState.startScale = zoomState.scale;
         } else if (e.touches.length === 1) {
           zoomState.isPanning = true;
@@ -512,12 +879,8 @@
       viewport.addEventListener('touchmove', (e) => {
         if (e.touches.length === 2 && zoomState.startDist > 0) {
           e.preventDefault();
-          const dist = Math.hypot(
-            e.touches[0].clientX - e.touches[1].clientX,
-            e.touches[0].clientY - e.touches[1].clientY
-          );
-          const factor = dist / zoomState.startDist;
-          zoomState.scale = Math.min(4, Math.max(1, zoomState.startScale * factor));
+          const dist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+          zoomState.scale = Math.min(4, Math.max(1, zoomState.startScale * (dist / zoomState.startDist)));
           applyZoomTransform();
         } else if (e.touches.length === 1 && zoomState.isPanning && zoomState.scale > 1) {
           e.preventDefault();
@@ -545,7 +908,7 @@
     }
 
     /********************************************************************
-     * 3. 後備繪本圖案
+     * 5. 後備繪本圖案
      ********************************************************************/
     function renderCuteSceneSVG(sceneKey) {
       const map = {
@@ -577,7 +940,7 @@
     }
 
     /********************************************************************
-     * 4. 讀取 questions.js 題庫與程式狀態
+     * 6. 讀取 questions.js 題庫與程式狀態
      ********************************************************************/
     const BANK = window.QUESTION_BANK || { causal: [], sequence: [] };
     let causalQuestions = BANK.causal || [];
@@ -587,6 +950,7 @@
     let activePatternId = 'because_therefore';
     let currentQuestionIndex = 0;
     let completedQuestionIds = new Set();
+    let solvedCountThisSession = 0;
 
     let difficulty = 1;
     let textMode = 'cantonese';
@@ -609,7 +973,7 @@
     }
 
     /********************************************************************
-     * 5. 音效與語音朗讀
+     * 7. 音效與語音朗讀
      ********************************************************************/
     let audioCtx = null;
     function getAudioCtx() {
@@ -629,9 +993,9 @@
         const osc = ctx.createOscillator(), gain = ctx.createGain();
         if (type === 'pop' || type === 'place') {
           osc.type = 'sine';
-          osc.frequency.setValueAtTime(500, now);
-          osc.frequency.exponentialRampToValueAtTime(750, now + 0.1);
-          gain.gain.setValueAtTime(0.16, now);
+          osc.frequency.setValueAtTime(520, now);
+          osc.frequency.exponentialRampToValueAtTime(820, now + 0.1);
+          gain.gain.setValueAtTime(0.18, now);
           gain.gain.exponentialRampToValueAtTime(0.01, now + 0.11);
           osc.connect(gain); gain.connect(ctx.destination);
           osc.start(now); osc.stop(now + 0.11);
@@ -749,7 +1113,7 @@
     }
 
     /********************************************************************
-     * 6. 主頁選單與練習畫面渲染
+     * 8. 主頁選單與練習畫面渲染
      ********************************************************************/
     function initApp() {
       const savedStars = localStorage.getItem('sen_causal_stars');
@@ -758,16 +1122,20 @@
         const savedDone = localStorage.getItem('sen_completed_qids_v2');
         if (savedDone) completedQuestionIds = new Set(JSON.parse(savedDone));
       } catch (e) {}
+      try {
+        const savedSt = localStorage.getItem('sen_unlocked_stickers_v1');
+        if (savedSt) unlockedStickers = new Set(JSON.parse(savedSt));
+      } catch (e) {}
 
       setupGlobalPointerListeners();
       setupPinchZoomGestures();
       updateTeacherControlsUI();
+      renderStickerBook();
       renderHomeScreen();
     }
 
     function renderHomeScreen() {
-      const homeStarEl = document.getElementById('homeStarCount');
-      if (homeStarEl) homeStarEl.textContent = starCount;
+      updateProgressTopBar();
       const grid = document.getElementById('patternMenuGrid');
       if (!grid) return;
       grid.innerHTML = '';
@@ -934,15 +1302,17 @@
     function updateProgressTopBar() {
       const qList = getActiveQuestionList();
       const prog = document.getElementById('progressText');
-      if (prog) prog.textContent = `${currentQuestionIndex + 1} / ${qList.length}`;
+      if (prog) prog.textContent = `第 ${currentQuestionIndex + 1} / ${qList.length} 題`;
       const badgeText = document.getElementById('activePatternBadgeText');
       if (badgeText) {
         badgeText.textContent = activePatternId === 'sequence_4step' ? `首先…${getSequenceWord(2)}…然後…最後…` : '因為…所以…';
       }
-      const starEl = document.getElementById('teacherStarCount');
-      if (starEl) starEl.textContent = starCount;
-      const homeStarEl = document.getElementById('homeStarCount');
-      if (homeStarEl) homeStarEl.textContent = starCount;
+      ['teacherStarCount', 'homeStarCount', 'trainStarCount', 'gachaStarCount'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = starCount;
+      });
+      const homeBadge = document.getElementById('homeStickerBadge');
+      if (homeBadge) homeBadge.textContent = `${unlockedStickers.size}/${STICKER_COLLECTION.length}`;
     }
 
     function renderWorkspace() {
@@ -1046,7 +1416,7 @@
       trayEl.className = 'flex justify-center items-center gap-3 sm:gap-5 w-full';
 
       if (availableCards.length === 0) {
-        trayEl.innerHTML = `<div class="flex items-center justify-center py-3 gap-2"><span class="text-3xl sm:text-4xl animate-bounce">🎉</span><span class="text-base sm:text-xl font-black text-pink-600">太棒了！全部擺好晒！</span><span class="text-3xl sm:text-4xl animate-bounce">🌟</span></div>`;
+        trayEl.innerHTML = `<div class="flex items-center justify-center py-2.5 gap-2"><span class="text-3xl sm:text-4xl animate-bounce">🎉</span><span class="text-base sm:text-xl font-black text-pink-600">太棒了！全部擺好晒！(+1 ⭐)</span><span class="text-3xl sm:text-4xl animate-bounce">🌟</span></div>`;
         return;
       }
 
@@ -1073,7 +1443,7 @@
     }
 
     /********************************************************************
-     * 7. 觸控與拖放邏輯
+     * 9. 觸控與拖放邏輯
      ********************************************************************/
     function handleCardPointerDown(e, card) {
       if (e.button && e.button !== 0) return;
@@ -1196,7 +1566,7 @@
     }
 
     /********************************************************************
-     * 8. 自動批改與獎勵
+     * 10. 自動批改、氣球獎勵與扭蛋提示
      ********************************************************************/
     function scheduleAutoCheckIfFull() {
       if (autoCheckTimer) clearTimeout(autoCheckTimer);
@@ -1218,6 +1588,7 @@
 
       if (wrongKeys.length === 0) {
         isCurrentQuestionSolved = true;
+        solvedCountThisSession++;
         playSound('success');
         launchConfetti();
         addStarReward();
@@ -1264,6 +1635,7 @@
       const isEffectOk = slots.effect && slots.effect.role === 'effect';
       if (isCauseOk && isEffectOk) {
         isCurrentQuestionSolved = true;
+        solvedCountThisSession++;
         playSound('success');
         launchConfetti();
         addStarReward();
@@ -1299,7 +1671,22 @@
       const bar = document.getElementById('actionOverlayBar');
       const content = document.getElementById('actionOverlayContent');
       bar.classList.remove('hidden');
-      content.innerHTML = `<button onclick="nextQuestion()" class="tactile-btn bg-gradient-to-r from-emerald-400 via-teal-500 to-green-500 text-white border-3 border-white px-7 py-2 rounded-full font-black text-base sm:text-xl shadow-xl flex items-center gap-2 animate-bounce"><span>🌟 下一題</span><span>➡️</span></button>`;
+
+      const canGacha = starCount >= 2 && unlockedStickers.size < STICKER_COLLECTION.length;
+
+      content.innerHTML = `
+        <button onclick="startBalloonRewardGame()" class="tactile-btn bg-gradient-to-r from-pink-500 via-rose-500 to-orange-400 hover:from-pink-400 hover:to-orange-300 text-white border-3 border-white px-5 py-1.5 rounded-full font-black text-sm sm:text-lg shadow-xl flex items-center gap-1.5 animate-pop">
+          <span>🎈</span><span>篤氣球獎勵</span>
+        </button>
+        ${canGacha ? `
+          <button onclick="openStickerModal()" class="tactile-btn bg-gradient-to-r from-purple-500 to-fuchsia-500 text-white border-3 border-white px-5 py-1.5 rounded-full font-black text-sm sm:text-lg shadow-xl flex items-center gap-1.5 animate-bounce">
+            <span>🎁</span><span>去扭蛋抽貼紙！</span>
+          </button>
+        ` : ''}
+        <button onclick="nextQuestion()" class="tactile-btn bg-gradient-to-r from-emerald-400 via-teal-500 to-green-500 text-white border-3 border-white px-6 py-1.5 rounded-full font-black text-base sm:text-xl shadow-xl flex items-center gap-2 animate-bounce">
+          <span>下一題</span><span>➡️</span>
+        </button>
+      `;
     }
 
     function hideActionOverlay() {
