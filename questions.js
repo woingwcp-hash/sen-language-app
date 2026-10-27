@@ -23,8 +23,8 @@ window.QUESTION_BANK = {
     },
     {
       id: "c2",
-      cause:  { cantonese: "肚仔好餓咕咕叫", written: "肚子很餓咕咕叫", img: "images/hungry_cause.jpg",  sceneKey: "hungry_cause" },
-      effect: { cantonese: "要食熱辣辣嘅麵", written: "要吃熱騰騰的麵", img: "images/hungry_effect.jpg", sceneKey: "hungry_effect" },
+      cause:  { cantonese: "肚仔好餓", written: "肚子很餓", img: "images/hungry_cause.jpg",  sceneKey: "hungry_cause" },
+      effect: { cantonese: "要食飯", written: "要吃飯", img: "images/hungry_effect.jpg", sceneKey: "hungry_effect" },
       distractors: [
         { cantonese: "地毯砌積木", written: "地毯砌積木", img: "images/dist_blocks.jpg", sceneKey: "dist_blocks" },
         { cantonese: "蠟筆畫彩虹", written: "蠟筆畫彩虹", img: "images/dist_draw.jpg",   sceneKey: "dist_draw" }
